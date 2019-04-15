@@ -18,6 +18,11 @@ public class RoleInfoController {
     @Autowired
     RoleInfoService roleInfoService;
 
+    /**
+     * 添加管理员类型
+     * @param roleInfo
+     * @return
+     */
     @RequestMapping(value = "bgAddRoleInfo",method = RequestMethod.POST)
     public Boolean addRoleInfo(@RequestBody RoleInfo roleInfo){
             System.out.println(roleInfo);
