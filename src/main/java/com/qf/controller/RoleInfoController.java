@@ -76,7 +76,7 @@ public class RoleInfoController {
     @RequestMapping(value = "delRoleInfo",method = RequestMethod.POST)
     public Boolean delRoleInfo(String[] array){
 
-        return service.delRoleInfo(array);
+        return service.delUserRole(array);
     }
 
     /**
@@ -104,6 +104,17 @@ public class RoleInfoController {
     public Boolean userRoleForbidden(@RequestBody UserInfoVo vo){
         System.out.println(vo);
         return service.userRoleForbidden(vo);
+    }
+
+    /**
+     * 修改角色状态
+     * @param roleInfoVo
+     * @return
+     */
+    @RequestMapping(value = "updateRoleInfoFlagById",method = RequestMethod.POST)
+    public Boolean updateRoleInfoFlagById(@RequestBody RoleInfoVo roleInfoVo) {
+
+        return service.updateRoleInfoFlagById(roleInfoVo);
     }
 
 }

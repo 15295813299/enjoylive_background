@@ -11,6 +11,15 @@ public class RoleInfoVo {
   private int flagf=-1;
   private Integer pageSize=5;
   private Integer currentPage=1;
+  private Integer[] roleIds;
+
+  public Integer[] getRoleIds() {
+    return roleIds;
+  }
+
+  public void setRoleIds(Integer[] roleIds) {
+    this.roleIds = roleIds;
+  }
 
   public Integer getPageSize() {
     return pageSize;
