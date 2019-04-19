@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qf.mapper.DataStatisticsMapper">
+    <select id="getArticleCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM articleInfo WHERE flag=1
+    </select>
+
+    <select id="getUserCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM userInfo WHERE flag=1
+    </select>
+
+    <select id="getCommentCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM commentInfo WHERE flag=1
+    </select>
+
+    <select id="getBrowseCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM browseInfo WHERE flag=1
+    </select>
+
+    <select id="getSupportCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM support WHERE flag=1
+    </select>
+
+    <select id="getLoginCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM total
+    </select>
+</mapper>

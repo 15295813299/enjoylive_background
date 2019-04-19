@@ -24,7 +24,7 @@ public class UserInfoDto {
   private String birthYMD;
   private String flag;
   private String status;
-  private Integer pageSize=2;
+  private Integer pageSize=5;
   private Integer currentPage=1;
 
   public Integer getPageSize() {

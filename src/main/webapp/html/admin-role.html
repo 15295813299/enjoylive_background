@@ -147,7 +147,7 @@
           success: function (data) {
               console.log(data)
               $("#sumT").html(data.length)
-              $(data).each(function (index,item) {
+              $(data.list).each(function (index,item) {
 
                   $("<tr>\n" +
                       "            <td>\n" +

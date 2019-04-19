@@ -36,7 +36,7 @@
         </ul>
         <ul class="layui-nav right" lay-filter="">
           <li class="layui-nav-item">
-            <a href="javascript:;">admin</a>
+            <a href="javascript:;"><span id="loginName"></span></a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
               <dd><a onClick="x_admin_show('个人信息','http://www.baidu.com')">个人信息</a></dd>
               <dd><a onClick="x_admin_show('切换帐号',getRootPath()+'/login2.html')">切换帐号</a></dd>
@@ -286,5 +286,14 @@
         <div class="copyright">Copyright ©2019 L-admin v2.3 All Rights Reserved</div>  
     </div>-->
     <!-- 底部结束 -->
+    <script>
+        $.ajax({
+            type:"GET",
+            url:"getSessionLoginInfo",
+            success:function (data) {
+                $("#loginName").html(data.name)
+            }
+        })
+    </script>
 </body>
 </html>

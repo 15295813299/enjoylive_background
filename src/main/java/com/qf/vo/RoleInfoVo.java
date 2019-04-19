@@ -9,7 +9,7 @@ public class RoleInfoVo {
   private String rule;
   private int flag=-1;
   private int flagf=-1;
-  private Integer pageSize=2;
+  private Integer pageSize=5;
   private Integer currentPage=1;
 
   public Integer getPageSize() {
