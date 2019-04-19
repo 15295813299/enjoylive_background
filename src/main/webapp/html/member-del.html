@@ -18,6 +18,7 @@
       <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
       <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="../js/tool.js"></script>
   </head>
   
   <body>
@@ -42,7 +43,7 @@
       </div>
       <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量恢复</button>
-        <span class="x-right" style="line-height:40px">共有数据：88 条</span>
+        <span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>
       </xblock>
       <table class="layui-table">
         <thead>
@@ -60,55 +61,8 @@
             <th>状态</th>
             <th>操作</th></tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-            </td>
-            <td>1</td>
-            <td>小明</td>
-            <td>男</td>
-            <td>13000000000</td>
-            <td>admin@mail.com</td>
-            <td>北京市 海淀区</td>
-            <td>2017-01-01 11:11:42</td>
-            <td class="td-status">
-              <span class="layui-btn layui-btn-danger layui-btn-mini">
-                                已删除
-                            </span>
-            <td class="td-manage">
-              <a title="恢复" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                <i class="layui-icon">&#xe618;</i>
-              </a>
-              <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                <i class="layui-icon">&#xe640;</i>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-            </td>
-            <td>1</td>
-            <td>小明</td>
-            <td>男</td>
-            <td>13000000000</td>
-            <td>admin@mail.com</td>
-            <td>北京市 海淀区</td>
-            <td>2017-01-01 11:11:42</td>
-            <td class="td-status">
-              <span class="layui-btn layui-btn-danger layui-btn-mini">
-                                已删除
-                            </span>
-            <td class="td-manage">
-              <a title="恢复" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                <i class="layui-icon">&#xe618;</i>
-              </a>
-              <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                <i class="layui-icon">&#xe640;</i>
-              </a>
-            </td>
-          </tr>
+        <tbody id="tbody">
+          <tr></tr>
         </tbody>
       </table>
       <div class="page">
@@ -160,6 +114,47 @@
             $(".layui-form-checked").not('.header').parents('tr').remove();
         });
       }
+
+      $.ajax({
+          type: "POST",
+          url:getRootPath()+"/getUserInfoBy",
+          contentType: "application/json;charset=UTF-8",
+          dataType: "json",
+          data:JSON.stringify({
+              flag:'0'
+          }),
+          success: function (data) {
+              $("#sumT").html(data.length)
+              console.log(data)
+              $("#sumT").html(data.length)
+              $(data).each(function (index,item) {
+
+                  $("<tr>\n" +
+                      "            <td>\n" +
+                      "              <div class=\"layui-unselect layui-form-checkbox\" lay-skin=\"primary\" data-id='2'><i class=\"layui-icon\">&#xe605;</i></div>\n" +
+                      "            </td>\n" +
+                      "            <td>"+item.userInfoId+"</td>\n" +
+                      "            <td>"+item.username+"</td>\n" +
+                      "            <td>"+item.sex+"</td>\n" +
+                      "            <td>"+item.phone+"</td>\n" +
+                      "            <td>"+item.email+"</td>\n" +
+                      "            <td>"+item.city+"</td>\n" +
+                      "            <td>"+item.registrationDate+"</td>\n" +
+                      "            <td class=\"td-status\">\n" +
+                      "              <span class=\"layui-btn layui-btn-danger layui-btn-mini\">\n" +
+                      "                                已删除\n" +
+                      "                            </span>\n" +
+                      "            <td class=\"td-manage\">\n" +
+                      "              <a title=\"恢复\" onclick=\"member_del(this,'"+item.userInfoId+"')\" href=\"javascript:;\">\n" +
+                      "                <i class=\"layui-icon\">&#xe618;</i>\n" +
+                      "              </a>\n" +
+                      "            </td>\n" +
+                      "          </tr>").insertBefore("#tbody>tr:eq("+index+")")
+              })
+
+          }
+      })
+
     </script>
   </body>
 

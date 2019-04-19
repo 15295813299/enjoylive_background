@@ -1,22 +1,13 @@
 package com.qf.pojo;
 
-/**
- * 类别表
- */
 
 public class Category {
 
-  //类别id
   private long categoryId;
-  //类别名
   private String categoryName;
-  //类别大图
   private String categoryPoto;
-  //类别小图
   private String categoryLogo;
-  //父类id
   private long parentId;
-  //状态
   private String flag;
 
 
@@ -73,16 +64,4 @@ public class Category {
     this.flag = flag;
   }
 
-
-  @Override
-  public String toString() {
-    return "Category{" +
-            "categoryId=" + categoryId +
-            ", categoryName='" + categoryName + '\'' +
-            ", categoryPoto='" + categoryPoto + '\'' +
-            ", categoryLogo='" + categoryLogo + '\'' +
-            ", parentId=" + parentId +
-            ", flag='" + flag + '\'' +
-            '}';
-  }
 }

@@ -54,14 +54,4 @@ public class Violate {
     this.violateHref = violateHref;
   }
 
-  @Override
-  public String toString() {
-    return "Violate{" +
-            "violateId=" + violateId +
-            ", userInfoId=" + userInfoId +
-            ", articleId=" + articleId +
-            ", violateContent='" + violateContent + '\'' +
-            ", violateHref='" + violateHref + '\'' +
-            '}';
-  }
 }

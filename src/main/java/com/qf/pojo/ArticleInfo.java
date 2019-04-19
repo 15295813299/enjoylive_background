@@ -1,24 +1,14 @@
 package com.qf.pojo;
 
 
-/**
- * 文章信息表
- */
 public class ArticleInfo {
 
-  //文章自增id
   private long articleId;
-  //'用户Id自增主键'
   private long userInfoId;
-  //'类别id'
   private long categoryId;
-  //'文章标题'
   private String title;
-  //'文章内容'
   private String content;
-  //'发帖时间
   private java.sql.Timestamp articleInfoDate;
-  //'文章状态'(0删除，1展示)
   private String flag;
 
 
@@ -84,17 +74,4 @@ public class ArticleInfo {
     this.flag = flag;
   }
 
-
-  @Override
-  public String toString() {
-    return "ArticleInfo{" +
-            "articleId=" + articleId +
-            ", userInfoId=" + userInfoId +
-            ", categoryId=" + categoryId +
-            ", title='" + title + '\'' +
-            ", content='" + content + '\'' +
-            ", articleInfoDate=" + articleInfoDate +
-            ", flag='" + flag + '\'' +
-            '}';
-  }
 }

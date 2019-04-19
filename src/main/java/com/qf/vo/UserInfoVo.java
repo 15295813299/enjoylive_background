@@ -1,7 +1,9 @@
-package com.qf.pojo;
+package com.qf.vo;
 
 
-public class UserInfo {
+import java.util.List;
+
+public class UserInfoVo {
 
   private long userInfoId;
   private String username;
@@ -16,11 +18,12 @@ public class UserInfo {
   private String province;
   private String city;
   private long brief;
-  private java.sql.Timestamp registrationDate;
+  private String registrationDate;
   private String birthYear;
   private String birthMonth;
   private String birthYMD;
-  private String flag;
+  private int flag;
+  private List<RoleInfoVo> roleInfoVo;
 
 
   public long getUserInfoId() {
@@ -39,16 +42,6 @@ public class UserInfo {
   public void setUsername(String username) {
     this.username = username;
   }
-
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
 
   public long getAge() {
     return age;
@@ -140,11 +133,11 @@ public class UserInfo {
   }
 
 
-  public java.sql.Timestamp getRegistrationDate() {
+  public String getRegistrationDate() {
     return registrationDate;
   }
 
-  public void setRegistrationDate(java.sql.Timestamp registrationDate) {
+  public void setRegistrationDate(String registrationDate) {
     this.registrationDate = registrationDate;
   }
 
@@ -174,12 +167,54 @@ public class UserInfo {
     this.birthYMD = birthYMD;
   }
 
-  public String getFlag() {
+  public int getFlag() {
     return flag;
   }
 
-  public void setFlag(String flag) {
+  public void setFlag(int flag) {
     this.flag = flag;
   }
 
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public List<RoleInfoVo> getRoleInfoVo() {
+    return roleInfoVo;
+  }
+
+  public void setRoleInfoVo(List<RoleInfoVo> roleInfoVo) {
+    this.roleInfoVo = roleInfoVo;
+  }
+
+
+
+  @Override
+  public String toString() {
+    return "UserInfoVo{" +
+            "userInfoId=" + userInfoId +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", age=" + age +
+            ", sex='" + sex + '\'' +
+            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            ", phone='" + phone + '\'' +
+            ", headPath='" + headPath + '\'' +
+            ", country='" + country + '\'' +
+            ", province='" + province + '\'' +
+            ", city='" + city + '\'' +
+            ", brief=" + brief +
+            ", registrationDate='" + registrationDate + '\'' +
+            ", birthYear='" + birthYear + '\'' +
+            ", birthMonth='" + birthMonth + '\'' +
+            ", birthYMD='" + birthYMD + '\'' +
+            ", flag='" + flag + '\'' +
+            ", roleInfoVo=" + roleInfoVo +
+            '}';
+  }
 }

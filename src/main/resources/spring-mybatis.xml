@@ -25,6 +25,20 @@
         <property name="dataSource" ref="dataSource"></property>
         <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
         <property name="typeAliasesPackage" value="com.qf.background.pojo"></property>
+
+        <!-- other configuration -->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!-- config params as the following -->
+                        <value>
+                            param1=mysql
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
     </bean>
 
     <!--配置mybatis接口扫描器-->

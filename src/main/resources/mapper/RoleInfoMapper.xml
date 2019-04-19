@@ -3,7 +3,98 @@
         PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qf.mapper.RoleInfoMapper">
+    <resultMap id="getUserRoleInfoMap" type="com.qf.dto.UserInfoDto">
+        <id property="userInfoId" column="userInfoId"></id>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <result property="sex" column="sex"></result>
+        <result property="name" column="name"></result>
+        <result property="email" column="email"></result>
+        <result property="phone" column="phone"></result>
+        <result property="headPath" column="headPath"></result>
+        <result property="country" column="country"></result>
+        <result property="province" column="province"></result>
+        <result property="registrationDate" column="registrationDate"></result>
+        <result property="flag" column="flag"></result>
+        <result property="city" column="city"></result>
+        <collection property="roleInfoDto" ofType="com.qf.dto.RoleInfoDto">
+            <id property="roleId" column="roleId"></id>
+            <result column="roleName" property="roleName"></result>
+        </collection>
+    </resultMap>
     <insert id="addRoleInfo" parameterType="com.qf.pojo.RoleInfo">
         insert into roleInfo(roleName,roleDescribe) values(#{roleName},#{roleDescribe})
     </insert>
+    <select id="getUserRoleInfoAll" parameterType="com.qf.vo.RoleInfoVo" resultMap="getUserRoleInfoMap">
+        SELECT u.userInfoId,u.username,u.`name`,u.phone,u.email,r.roleName,u.registrationDate,ur.flag FROM userInfo u,user_role ur,roleInfo r WHERE u.userInfoId=ur.userInfoId AND u.flag=1 AND ur.roleId=r.roleId
+        <if test="flag!=-1 and flagf==-1 ">
+            and ur.flag=#{flag}
+        </if>
+         <if test="flagf!=-1 and flag!=-1 ">
+              and ur.flag in(#{flagf},#{flag})
+         </if>
+    </select>
+
+    <select id="getRoleInfoAll" parameterType="com.qf.vo.RoleInfoVo" resultType="com.qf.dto.RoleInfoDto">
+           SELECT * from roleInfo
+        <where>
+            <if test="flag!=null and flag!='' ">
+                flag=#{flag}
+            </if>
+
+        </where>
+
+    </select>
+
+    <update id="delRoleInfo" parameterType="java.lang.String">
+        update user_role set flag=0 where userInfoId in
+        <foreach collection="array" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <select id="getUserRoleInfoBy" parameterType="com.qf.vo.UserInfoVo" resultMap="getUserRoleInfoMap">
+           SELECT
+                tb1.*,
+                r.roleId,
+                r.roleName,
+                r.flag
+            FROM
+                (
+                    SELECT
+                        u.userInfoId,
+                        u.username,
+                        u.password,
+                        u.sex,
+                        u.name,
+                        u.email,
+                        u.phone,
+                        u.headPath,
+                        u.country,
+                        u.province,
+                        u.city,
+                        ur.roleId rid
+                    FROM
+                        userInfo u,
+                        user_role ur
+                    WHERE
+                        u.userInfoId = ur.userInfoId
+                    AND u.userInfoId = #{userInfoId}
+                ) tb1
+            RIGHT JOIN roleInfo r ON tb1.rid = r.roleId
+            WHERE r.flag=1
+        </select>
+
+    <update id="updateUserRole" parameterType="com.qf.vo.UserInfoVo">
+        update user_role set flag=#{flag} where userInfoId=#{userInfoId}
+    </update>
+
+    <insert id="addUserRole" parameterType="com.qf.vo.UserInfoVo">
+        insert into user_role(userInfoId, roleId) values
+        <foreach collection="roleInfoVo" separator="," item="item">
+            (#{userInfoId},#{item.roleId})
+        </foreach>
+    </insert>
+
 </mapper>

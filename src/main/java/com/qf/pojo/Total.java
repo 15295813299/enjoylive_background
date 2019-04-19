@@ -1,20 +1,12 @@
 package com.qf.pojo;
 
-/**
- * 统计用户登录信息
- */
 
 public class Total {
 
-  //自增id
   private long totalId;
-  //登录的用户
   private long userInfoId;
-  //登录的时间（自动生成）
   private java.sql.Timestamp loginTime;
-  //登录的ip
   private String loginIp;
-  //登录的地址
   private String loginArea;
 
 
@@ -62,14 +54,4 @@ public class Total {
     this.loginArea = loginArea;
   }
 
-  @Override
-  public String toString() {
-    return "Total{" +
-            "totalId=" + totalId +
-            ", userInfoId=" + userInfoId +
-            ", loginTime=" + loginTime +
-            ", loginIp='" + loginIp + '\'' +
-            ", loginArea='" + loginArea + '\'' +
-            '}';
-  }
 }

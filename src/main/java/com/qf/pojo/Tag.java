@@ -1,17 +1,10 @@
 package com.qf.pojo;
 
 
-/**
- * 标签表
- */
-
 public class Tag {
 
-  //标签id
   private long tagId;
-  //标签名字
   private long tagName;
-  //标签搜索次数
   private long total;
   private String flag;
 
@@ -51,13 +44,4 @@ public class Tag {
     this.flag = flag;
   }
 
-  @Override
-  public String toString() {
-    return "Tag{" +
-            "tagId=" + tagId +
-            ", tagName=" + tagName +
-            ", total=" + total +
-            ", flag='" + flag + '\'' +
-            '}';
-  }
 }

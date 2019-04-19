@@ -1,15 +1,10 @@
 package com.qf.pojo;
 
-/**
- * 点赞表
- */
+
 public class Support {
 
-  //自增id
   private long supportId;
-  //点赞的用户id
   private long userInfoId;
-  //点赞的文章
   private long articleId;
 
 
@@ -39,12 +34,4 @@ public class Support {
     this.articleId = articleId;
   }
 
-  @Override
-  public String toString() {
-    return "Support{" +
-            "supportId=" + supportId +
-            ", userInfoId=" + userInfoId +
-            ", articleId=" + articleId +
-            '}';
-  }
 }

@@ -18,6 +18,7 @@
       <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
       <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+      <script src="../js/tool.js"></script>
   </head>
   
   <body>
@@ -62,9 +63,7 @@
           <div class="layui-form-item">
               <label class="layui-form-label"><span class="x-red">*</span>角色</label>
               <div class="layui-input-block">
-                <input type="checkbox" name="like1[write]" lay-skin="primary" title="超级管理员" checked="">
-                <input type="checkbox" name="like1[read]" lay-skin="primary" title="编辑人员">
-                <input type="checkbox" name="like1[write]" lay-skin="primary" title="宣传人员" >
+                  <input type="hidden"/>
               </div>
           </div>
           <div class="layui-form-item">
@@ -121,18 +120,97 @@
           //监听提交
           form.on('submit(add)', function(data){
             console.log(data);
-            //发异步，把数据提交给php
-            layer.alert("增加成功", {icon: 6},function () {
-                // 获得frame索引
-                var index = parent.layer.getFrameIndex(window.name);
-                //关闭当前frame
-                parent.layer.close(index);
-            });
+              var s=[];
+              $("input:checkbox[name='like1[write]']:checked").each(function(i){
+                  var object = {
+                      "roleId":$(this).val()
+                  }
+                 s[i]=object
+              });
+
+              $.ajax({
+                  type: "POST",
+                  url:getRootPath()+"/updateUserRole",
+                  contentType: "application/json;charset=UTF-8",
+                  dataType: "json",
+                  data:JSON.stringify({
+                      userInfoId:id,
+                      username:$("#username").val(),
+                      phone:$("#phone").val(),
+                      email:$("#L_email").val(),
+                      password:$("#L_pass").val(),
+                      roleInfoVo:s
+                  }),
+                  async : false,
+                  // traditional: true,
+                  success: function (data) {
+
+                      console.log(data)
+                      if (data==true){
+                          layer.alert("修改成功", {icon: 6},function () {
+                              // 获得frame索引
+                              var index = parent.layer.getFrameIndex(window.name);
+                              //关闭当前frame
+                              parent.layer.close(index);
+                          });
+                      } else {
+                          layer.alert("修改失败", {icon: 6},function () {
+                              // 获得frame索引
+                              var index = parent.layer.getFrameIndex(window.name);
+
+                          });
+                      }
+
+                  }
+              })
             return false;
           });
           
           
         });
+
+        var id = window.location.search.split("=")[1];
+        alert(id);
+
+        $.ajax({
+            type: "POST",
+            url:getRootPath()+"/getUserRoleInfoBy",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            data:JSON.stringify({
+                "userInfoId":id,
+            }),
+            async : false,
+            success: function (data) {
+
+                console.log(data)
+                $(data).each(function (index, item) {
+                    if (item.userInfoId != 0) {
+                        $("#username").val(item.username);
+                        $("#phone").val(item.phone);
+                        $("#L_email").val(item.email)
+                        $("#L_pass").val(item.password)
+                        $("#L_repass").val(item.password)
+                        $(item.roleInfoDto).each(function (index,item) {
+                            $("<input type=\"checkbox\" name=\"like1[write]\" lay-skin=\"primary\" title=\""+item.roleName+"\" checked=\"\" value='"+item.roleId+"' >\n" +
+                                "                     ").insertAfter(".layui-input-block>input:eq("+index+")")
+
+                        })
+                    }else {
+                        $(item.roleInfoDto).each(function (index1,item) {
+                            $("<input type=\"checkbox\" name=\"like1[write]\" lay-skin=\"primary\" title=\""+item.roleName+"\" value='"+item.roleId+"'>\n" +
+                                "                     ").insertAfter(".layui-input-block>input:eq("+index+")")
+                        })
+                    }
+
+                })
+
+            }
+        })
+
+
+
+
     </script>
   </body>
 

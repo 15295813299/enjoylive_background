@@ -18,6 +18,7 @@
       <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
       <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+      <script src="../js/tool.js"></script>
   </head>
   
   <body>
@@ -61,10 +62,11 @@
           </div>
           <div class="layui-form-item">
               <label class="layui-form-label"><span class="x-red">*</span>角色</label>
-              <div class="layui-input-block">
-                <input type="checkbox" name="like1[write]" lay-skin="primary" title="超级管理员" checked="">
-                <input type="checkbox" name="like1[read]" lay-skin="primary" title="编辑人员">
-                <input type="checkbox" name="like1[write]" lay-skin="primary" title="宣传人员" checked="">
+              <div class="layui-input-block" id="roleInfo">
+                  <input type="hidden" disabled="disabled"/>
+                <!--<input type="checkbox" name="like1[write]" lay-skin="primary" title="超级管理员" checked="">-->
+                <!--<input type="checkbox" name="like1[read]" lay-skin="primary" title="编辑人员">-->
+                <!--<input type="checkbox" name="like1[write]" lay-skin="primary" title="宣传人员" checked="">-->
               </div>
           </div>
           <div class="layui-form-item">
@@ -120,19 +122,79 @@
 
           //监听提交
           form.on('submit(add)', function(data){
+              var arr = new Array();
+              $("input:checkbox[name='like1[read]']:checked").each(function(i){
+                  arr[i] = $(this).val();
+              });
+              console.log(arr)
             console.log(data);
-            //发异步，把数据提交给php
-            layer.alert("增加成功", {icon: 6},function () {
-                // 获得frame索引
-                var index = parent.layer.getFrameIndex(window.name);
-                //关闭当前frame
-                parent.layer.close(index);
-            });
+            // // //发异步，把数据提交给php
+            // layer.alert("增加成功", {icon: 6},function () {
+            //     // 获得frame索引
+            //     var index = parent.layer.getFrameIndex(window.name);
+            //     //关闭当前frame
+            //     parent.layer.close(index);
+            // });
+
+              $.ajax({
+                  type: "POST",
+                  url: getRootPath() + "/addUserRole",
+                  contentType: "application/json;charset=UTF-8",
+                  dataType: "json",
+                  data: JSON.stringify({
+                      username: $("#username").val(),
+                      password: $("#password").val(),
+                      phone: $("#phone").val(),
+                      email: $("#L_email").val(),
+                      roleId: arr
+                  }),
+                  async: false,
+                  success: function (data) {
+                      console.log(data)
+                      if (data == true) {
+                          layer.alert("增加成功", {icon: 6},function () {
+                              // 获得frame索引
+                              var index = parent.layer.getFrameIndex(window.name);
+                              //关闭当前frame
+                              parent.layer.close(index);
+                          });
+                      } else {
+                          alert("添加失败")
+                      }
+                  },
+
+                  error:function (data) {
+                      alert("服务器内部错误");
+                  }
+              })
             return false;
           });
           
           
         });
+
+
+        $.ajax({
+            type: "POST",
+            url:getRootPath()+"/getRoleInfoAll",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            data:JSON.stringify({
+                flag:'1'
+            }),
+            async : false,
+            success: function (data) {
+                console.log(data)
+                $("#sumT").html(data.length)
+                $(data).each(function (index,item) {
+
+                    $("<input type=\"checkbox\" name=\"like1[read]\" value='"+item.roleId+"' lay-skin=\"primary\" title=\""+item.roleName+"\">").insertBefore("#roleInfo input:eq("+index+")")
+                })
+
+            }
+        })
+
+
     </script>
   </body>
 

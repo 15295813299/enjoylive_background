@@ -6,4 +6,61 @@
     <select id="LoginCheckRole" parameterType="com.qf.vo.LoginCheckVo" resultType="com.qf.pojo.UserInfo" >
           select u.* from userInfo u,user_role ur where u.username=#{username} and u.password=#{password} and u.userInfoId=ur.userInfoId and u.flag=1 and ur.flag=1
     </select>
+
+    <select id="getUserInfoBy" resultType="com.qf.dto.UserInfoDto" parameterType="com.qf.vo.UserInfoVo">
+        select * from userInfo
+        <where>
+            <trim prefixOverrides="and">
+                <if test="username!=null and username!=''">
+                    and username=#{username}
+                </if>
+                <if test="flag!=null and flag!=''">
+                    and flag=#{flag}
+                </if>
+            </trim>
+
+        </where>
+    </select>
+
+    <insert id="addUser" parameterType="com.qf.vo.AdminAddVo" >
+        insert into userInfo(username, password,email, phone) values (#{username},#{password},#{email},#{phone})
+    </insert>
+
+    <insert id="addUserRole" parameterType="com.qf.pojo.UserRole">
+        insert into user_role(userInfoId, roleId) VALUES (#{userInfoId},#{roleId})
+    </insert>
+
+    <update id="updateUserInfoById" parameterType="com.qf.vo.UserInfoVo">
+        update userInfo
+        <set>
+            <trim suffixOverrides=",">
+                <if test="username!=null and username!=''">
+                    username=#{username},
+                </if>
+                <if test="password!=null and password!=''">
+                    password=#{password},
+                </if>
+                <if test="sex!=null and sex!=''">
+                    sex=#{sex},
+                </if>
+                <if test="password!=null and password!=''">
+                    password=#{password},
+                </if>
+                <if test="name!=null and name!=''">
+                    name=#{name},
+                </if>
+                <if test="email!=null and email!=''">
+                    email=#{email},
+                </if>
+                <if test="phone!=null and phone!=''">
+                    phone=#{phone},
+                </if>
+                <if test="headPath!=null and headPath!=''">
+                    headPath=#{headPath},
+                </if>
+            </trim>
+        </set>
+        where userInfoId=#{userInfoId}
+    </update>
 </mapper>
+

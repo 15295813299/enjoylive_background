@@ -1,20 +1,12 @@
 package com.qf.pojo;
 
 
-/**
- * 子评论
- */
 public class SonComment {
 
-  //自增id
   private long sonCommentId;
-  //评论信息表id
   private long commentId;
-  //子评论的用户
   private long userInfoId;
-  //子评论信息
   private String message;
-  //评论的时间
   private java.sql.Timestamp sonCommentTime;
   private String flag;
 
@@ -72,15 +64,4 @@ public class SonComment {
     this.flag = flag;
   }
 
-  @Override
-  public String toString() {
-    return "SonComment{" +
-            "sonCommentId=" + sonCommentId +
-            ", commentId=" + commentId +
-            ", userInfoId=" + userInfoId +
-            ", message='" + message + '\'' +
-            ", sonCommentTime=" + sonCommentTime +
-            ", flag='" + flag + '\'' +
-            '}';
-  }
 }

@@ -1,19 +1,12 @@
 package com.qf.pojo;
 
 
-/**
- * 留言表
- */
 public class LeaveMessage {
-  //留言表自增id
+
   private long leaveMessageId;
-  //留言的id
   private long userInfoId;
-  //留给谁的
   private long leaveMessageToUser;
-  //留言信息
   private String leaveMessageText;
-  //留言时间
   private java.sql.Timestamp leaveMessageTime;
 
 
@@ -61,14 +54,4 @@ public class LeaveMessage {
     this.leaveMessageTime = leaveMessageTime;
   }
 
-  @Override
-  public String toString() {
-    return "LeaveMessage{" +
-            "leaveMessageId=" + leaveMessageId +
-            ", userInfoId=" + userInfoId +
-            ", leaveMessageToUser=" + leaveMessageToUser +
-            ", leaveMessageText='" + leaveMessageText + '\'' +
-            ", leaveMessageTime=" + leaveMessageTime +
-            '}';
-  }
 }

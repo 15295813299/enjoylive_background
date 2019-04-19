@@ -1,18 +1,11 @@
 package com.qf.pojo;
 
 
-/**
- * 粉丝表
- */
 public class FansInfo {
 
-  //自增id
   private long fansId;
-  //用户id
   private long userInfoId;
-  //用户的粉丝
   private long userFans;
-  //状态
   private String flag;
 
 
@@ -34,6 +27,15 @@ public class FansInfo {
   }
 
 
+  public long getUserFans() {
+    return userFans;
+  }
+
+  public void setUserFans(long userFans) {
+    this.userFans = userFans;
+  }
+
+
   public String getFlag() {
     return flag;
   }
@@ -42,13 +44,4 @@ public class FansInfo {
     this.flag = flag;
   }
 
-  @Override
-  public String toString() {
-    return "FansInfo{" +
-            "fansId=" + fansId +
-            ", userInfoId=" + userInfoId +
-            ", userFans=" + userFans +
-            ", flag=" + flag +
-            '}';
-  }
 }

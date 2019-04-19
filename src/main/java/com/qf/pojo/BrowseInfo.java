@@ -1,18 +1,12 @@
 package com.qf.pojo;
 
-/**
- * 浏览次数表
- *
- */
+
 public class BrowseInfo {
 
-  //
   private long browseInfoId;
-  //文章的主键
   private long articleId;
-  //用户的自增id
-  private long userInfoId;
-  //状态
+  private String userIp;
+  private String userMac;
   private String flag;
 
 
@@ -34,12 +28,21 @@ public class BrowseInfo {
   }
 
 
-  public long getUserInfoId() {
-    return userInfoId;
+  public String getUserIp() {
+    return userIp;
   }
 
-  public void setUserInfoId(long userInfoId) {
-    this.userInfoId = userInfoId;
+  public void setUserIp(String userIp) {
+    this.userIp = userIp;
+  }
+
+
+  public String getUserMac() {
+    return userMac;
+  }
+
+  public void setUserMac(String userMac) {
+    this.userMac = userMac;
   }
 
 
@@ -51,13 +54,4 @@ public class BrowseInfo {
     this.flag = flag;
   }
 
-  @Override
-  public String toString() {
-    return "BrowseInfo{" +
-            "browseInfoId=" + browseInfoId +
-            ", articleId=" + articleId +
-            ", userInfoId=" + userInfoId +
-            ", flag='" + flag + '\'' +
-            '}';
-  }
 }

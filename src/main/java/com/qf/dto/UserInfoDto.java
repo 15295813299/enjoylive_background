@@ -1,7 +1,9 @@
-package com.qf.pojo;
+package com.qf.dto;
 
 
-public class UserInfo {
+import java.util.List;
+
+public class UserInfoDto {
 
   private long userInfoId;
   private String username;
@@ -16,12 +18,32 @@ public class UserInfo {
   private String province;
   private String city;
   private long brief;
-  private java.sql.Timestamp registrationDate;
+  private String registrationDate;
   private String birthYear;
   private String birthMonth;
   private String birthYMD;
   private String flag;
+  private String status;
+  private Integer pageSize=2;
+  private Integer currentPage=1;
 
+  public Integer getPageSize() {
+    return pageSize;
+  }
+
+  public void setPageSize(Integer pageSize) {
+    this.pageSize = pageSize;
+  }
+
+  public Integer getCurrentPage() {
+    return currentPage;
+  }
+
+  public void setCurrentPage(Integer currentPage) {
+    this.currentPage = currentPage;
+  }
+
+  private List<RoleInfoDto> roleInfoDto;
 
   public long getUserInfoId() {
     return userInfoId;
@@ -39,16 +61,6 @@ public class UserInfo {
   public void setUsername(String username) {
     this.username = username;
   }
-
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
 
   public long getAge() {
     return age;
@@ -140,11 +152,11 @@ public class UserInfo {
   }
 
 
-  public java.sql.Timestamp getRegistrationDate() {
+  public String getRegistrationDate() {
     return registrationDate;
   }
 
-  public void setRegistrationDate(java.sql.Timestamp registrationDate) {
+  public void setRegistrationDate(String registrationDate) {
     this.registrationDate = registrationDate;
   }
 
@@ -174,8 +186,39 @@ public class UserInfo {
     this.birthYMD = birthYMD;
   }
 
+  public String getStatus() {
+    return status;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
   public String getFlag() {
+    if ("2".equals(flag)){
+      flag="layui-btn layui-btn-disabled";
+      status="停用";
+    }else {
+      flag="layui-btn";
+      status="启用";
+    }
     return flag;
+  }
+
+  public List<RoleInfoDto> getRoleInfoDto() {
+    return roleInfoDto;
+  }
+
+  public void setRoleInfoDto(List<RoleInfoDto> roleInfoDto) {
+    this.roleInfoDto = roleInfoDto;
   }
 
   public void setFlag(String flag) {

@@ -1,12 +1,14 @@
-package com.qf.pojo;
+package com.qf.vo;
 
 
-public class UserRole {
+import java.util.List;
+
+public class UserRoleVo {
 
   private long urId;
   private long userInfoId;
-  private long roleId;
-  private String flag;
+  private List<RoleInfoVo> role;
+  private int flag;
 
 
   public long getUrId() {
@@ -27,20 +29,20 @@ public class UserRole {
   }
 
 
-  public long getRoleId() {
-    return roleId;
+  public List<RoleInfoVo> getRoleId() {
+    return role;
   }
 
-  public void setRoleId(long roleId) {
-    this.roleId = roleId;
+  public void setRoleId(List<RoleInfoVo> roleId) {
+    this.role = roleId;
   }
 
 
-  public String getFlag() {
+  public int getFlag() {
     return flag;
   }
 
-  public void setFlag(String flag) {
+  public void setFlag(int flag) {
     this.flag = flag;
   }
 

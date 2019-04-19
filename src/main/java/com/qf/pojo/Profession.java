@@ -1,15 +1,10 @@
 package com.qf.pojo;
 
-/**
- * 喜欢的板块
- */
+
 public class Profession {
 
-  //自增id
   private long professionId;
-  //用户id
   private long userInfoId;
-  //板块id
   private long categoryId;
 
 
@@ -39,12 +34,4 @@ public class Profession {
     this.categoryId = categoryId;
   }
 
-  @Override
-  public String toString() {
-    return "Profession{" +
-            "professionId=" + professionId +
-            ", userInfoId=" + userInfoId +
-            ", categoryId=" + categoryId +
-            '}';
-  }
 }

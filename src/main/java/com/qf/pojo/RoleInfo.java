@@ -1,17 +1,12 @@
 package com.qf.pojo;
 
-/**
- * 管理员信息表
- */
+
 public class RoleInfo {
 
-  //自增id
   private long roleId;
-  //管理员名字
   private String roleName;
-  //管理员描述
   private String roleDescribe;
-  //状态
+  private String rule;
   private String flag;
 
 
@@ -32,13 +27,6 @@ public class RoleInfo {
     this.roleName = roleName;
   }
 
-  public String getFlag() {
-    return flag;
-  }
-
-  public void setFlag(String flag) {
-    this.flag = flag;
-  }
 
   public String getRoleDescribe() {
     return roleDescribe;
@@ -48,13 +36,22 @@ public class RoleInfo {
     this.roleDescribe = roleDescribe;
   }
 
-  @Override
-  public String toString() {
-    return "RoleInfo{" +
-            "roleId=" + roleId +
-            ", roleName='" + roleName + '\'' +
-            ", roleDescribe='" + roleDescribe + '\'' +
-            ", flag='" + flag + '\'' +
-            '}';
+
+  public String getRule() {
+    return rule;
   }
+
+  public void setRule(String rule) {
+    this.rule = rule;
+  }
+
+
+  public String getFlag() {
+    return flag;
+  }
+
+  public void setFlag(String flag) {
+    this.flag = flag;
+  }
+
 }

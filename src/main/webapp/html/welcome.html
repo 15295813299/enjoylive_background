@@ -9,11 +9,13 @@
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="../css/font.css">
         <link rel="stylesheet" href="../css/xadmin.css">
+        <script src="../js/jquery-1.8.2.js"></script>
+        <script src="../js/tool.js"></script>
     </head>
     <body>
     <div class="x-body layui-anim layui-anim-up">
         <blockquote class="layui-elem-quote">欢迎管理员：
-            <span class="x-red">test</span>！当前时间:2018-04-25 20:50:53</blockquote>
+            <span class="x-red" id="RoleName"></span>！当前时间:<span id="aTime"></span></blockquote>
         <fieldset class="layui-elem-field">
             <legend>数据统计</legend>
             <div class="layui-field-box">
@@ -27,42 +29,42 @@
                                             <a href="javascript:;" class="x-admin-backlog-body">
                                                 <h3>文章数</h3>
                                                 <p>
-                                                    <cite>66</cite></p>
+                                                    <cite id="articleCount">66</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
                                                 <h3>会员数</h3>
                                                 <p>
-                                                    <cite>12</cite></p>
+                                                    <cite id="userCount">12</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
                                                 <h3>回复数</h3>
                                                 <p>
-                                                    <cite>99</cite></p>
+                                                    <cite id="commentCount">99</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
-                                                <h3>商品数</h3>
+                                                <h3>浏览数</h3>
                                                 <p>
-                                                    <cite>67</cite></p>
+                                                    <cite id="browseCount">67</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
-                                                <h3>文章数</h3>
+                                                <h3>点赞数</h3>
                                                 <p>
-                                                    <cite>67</cite></p>
+                                                    <cite id="supportCount">67</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs2">
                                             <a href="javascript:;" class="x-admin-backlog-body">
-                                                <h3>文章数</h3>
+                                                <h3>当日活跃度</h3>
                                                 <p>
-                                                    <cite>6766</cite></p>
+                                                    <cite id="loginCount">6766</cite></p>
                                             </a>
                                         </li>
                                     </ul>
@@ -155,4 +157,49 @@
     </div>
    
     </body>
+
+<script>
+    $(function () {
+        $.ajax({
+            type: "GET",
+            url:getRootPath()+"/getSessionLoginInfo",
+
+            success: function (data) {
+                console.log(data)
+                $(data).each(function (index,item) {
+
+                    $("#RoleName").html(item.name);
+                })
+
+            }
+        })
+
+        var attime;
+        function clock(){
+            var time=new Date();
+            attime= time.toLocaleTimeString() ;
+            $("#aTime").html(attime)
+        }
+        setInterval(clock,1000);
+
+        $.ajax({
+            type: "GET",
+            url:getRootPath()+"/getCount",
+
+            success: function (data) {
+                console.log(data)
+                $(data).each(function (index,item) {
+
+                    $("#articleCount").html(item.articleCount);
+                    $("#userCount").html(item.userCount);
+                    $("#commentCount").html(item.commentCount);
+                    $("#browseCount").html(item.browseCount);
+                    $("#supportCount").html(item.supportCount);
+                    $("#loginCount").html(item.loginCount);
+                })
+
+            }
+        })
+    })
+</script>
 </html>
