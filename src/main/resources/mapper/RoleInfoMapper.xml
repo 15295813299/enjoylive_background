@@ -26,7 +26,7 @@
         insert into roleInfo(roleName,roleDescribe) values(#{roleName},#{roleDescribe})
     </insert>
     <select id="getUserRoleInfoAll" parameterType="com.qf.vo.RoleInfoVo" resultMap="getUserRoleInfoMap">
-        SELECT u.userInfoId,u.username,u.`name`,u.phone,u.email,r.roleName,u.registrationDate,ur.flag FROM userInfo u,user_role ur,roleInfo r WHERE u.userInfoId=ur.userInfoId AND u.flag=1 AND ur.roleId=r.roleId
+        SELECT u.userInfoId,u.username,u.`name`,u.phone,u.email,r.roleName,u.registrationDate,ur.flag FROM userInfo u,user_role ur,roleInfo r WHERE u.userInfoId=ur.userInfoId AND u.flag=1 AND r.flag=1 AND ur.roleId=r.roleId
         <if test="flag!=-1 and flagf==-1 ">
             and ur.flag=#{flag}
         </if>
@@ -38,10 +38,10 @@
     <select id="getRoleInfoAll" parameterType="com.qf.vo.RoleInfoVo" resultType="com.qf.dto.RoleInfoDto">
            SELECT * from roleInfo
         <where>
-            <if test="flag!=null and flag!='' and flagf==null or flagf=='' ">
+            <if test="flag!=null and flag!='' and  flagf==-1 ">
                 flag=#{flag}
             </if>
-            <if test="flagf!=null and flagf!='' and flag!=null and flag!='' ">
+            <if test="flagf!=null and flagf!=-1 and flag!=null and flag!=-1 ">
                 flag=#{flagf} or flag=#{flag}
             </if>
         </where>

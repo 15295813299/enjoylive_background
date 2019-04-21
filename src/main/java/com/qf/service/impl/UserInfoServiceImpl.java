@@ -55,6 +55,13 @@ public class UserInfoServiceImpl implements UserInfoService {
         return true;
     }
 
+    public Boolean updateUserInfoById(UserInfoVo vo) {
+        int i = mapper.updateUserInfoById(vo);
+        if (i>0) {
+            return true;
+        }
+        return false;
+    }
 
 
 }

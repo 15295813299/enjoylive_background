@@ -17,14 +17,42 @@ public class UserInfoVo {
   private String country;
   private String province;
   private String city;
-  private long brief;
+  private String brief;
   private String registrationDate;
   private String birthYear;
   private String birthMonth;
   private String birthYMD;
-  private int flag;
+  private int flag=-1;
+  private int flagf=-1;
+  private int pageSize=100;
+  private int currentPage=1;
+  private int[] userInfoIds;
   private List<RoleInfoVo> roleInfoVo;
 
+
+  public int getPageSize() {
+    return pageSize;
+  }
+
+  public void setPageSize(int pageSize) {
+    this.pageSize = pageSize;
+  }
+
+  public int getCurrentPage() {
+    return currentPage;
+  }
+
+  public void setCurrentPage(int currentPage) {
+    this.currentPage = currentPage;
+  }
+
+  public int getFlagf() {
+    return flagf;
+  }
+
+  public void setFlagf(int flagf) {
+    this.flagf = flagf;
+  }
 
   public long getUserInfoId() {
     return userInfoId;
@@ -124,11 +152,11 @@ public class UserInfoVo {
   }
 
 
-  public long getBrief() {
+  public String getBrief() {
     return brief;
   }
 
-  public void setBrief(long brief) {
+  public void setBrief(String brief) {
     this.brief = brief;
   }
 
@@ -192,6 +220,13 @@ public class UserInfoVo {
   }
 
 
+  public int[] getUserInfoIds() {
+    return userInfoIds;
+  }
+
+  public void setUserInfoIds(int[] userInfoIds) {
+    this.userInfoIds = userInfoIds;
+  }
 
   @Override
   public String toString() {

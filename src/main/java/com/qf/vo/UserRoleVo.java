@@ -8,7 +8,7 @@ public class UserRoleVo {
   private long urId;
   private long userInfoId;
   private List<RoleInfoVo> role;
-  private int flag;
+  private int flag=-1;
 
 
   public long getUrId() {

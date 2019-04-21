@@ -19,6 +19,9 @@
       <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="../js/tool.js"></script>
+    <style>
+      .layui-table-page{text-align: center;}
+    </style>
   </head>
   
   <body class="layui-anim layui-anim-up">
@@ -30,7 +33,7 @@
           <cite>导航元素</cite></a>
       </span>
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-        <i class="layui-icon" style="line-height:38px">ဂ</i></a>
+      <i class="layui-icon" style="line-height:38px">ဂ</i></a>
     </div>
     <div class="x-body">
       <div class="layui-row">
@@ -41,85 +44,126 @@
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
-      <xblock>
-        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','./member-add.html',600,400)"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>
-      </xblock>
-      <table class="layui-table">
-        <thead>
-          <tr>
-            <th>
-              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-            </th>
-            <th>ID</th>
-            <th>用户名</th>
-            <th>性别</th>
-            <th>手机</th>
-            <th>邮箱</th>
-            <th>地址</th>
-            <th>加入时间</th>
-            <th>状态</th>
-            <th>操作</th></tr>
-        </thead>
-        <tbody id="tbody">
-          <tr></tr>
-        </tbody>
+      <table class="layui-table" id="ttable" lay-filter="test">
+
       </table>
       <div class="page">
-        <div>
-          <a class="prev" href="">&lt;&lt;</a>
-          <a class="num" href="">1</a>
-          <span class="current">2</span>
-          <a class="num" href="">3</a>
-          <a class="num" href="">489</a>
-          <a class="next" href="">&gt;&gt;</a>
+        <div id="page">
         </div>
       </div>
 
     </div>
+    <script type="text/html" id="barDemo">
+      <a title="编辑"><i class="layui-icon" lay-event="edit" >&#xe642;</i></a>
+      <a title="修改密码"><i class="layui-icon" lay-event="editPassword">&#xe631;</i></a>
+      <a title="删除"><i class="layui-icon" lay-event="del">&#xe640;</i></a>
+    </script>
+    <script type="text/html" id="toolbarDemo">
+      <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+      </div>
+    </script>
+    <script type="text/html" id="btn">
+      <!-- 这里的 checked 的状态只是演示 -->
+      <input type="checkbox" name="status" value="{{d.userInfoId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo" {{ d.status == '启用' ? 'checked' : '' }}>
+    </script>
     <script>
-      layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#start' //指定元素
-        });
-
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#end' //指定元素
-        });
-      });
-
        /*用户-停用*/
-      function member_stop(obj,id){
-          layer.confirm('确认要停用吗？',function(index){
+      function member_stop(obj,id,flag){
+              var ids=new Array()
+              ids.push(id)
+              if(!flag){
 
-              if($(obj).attr('title')=='启用'){
+                  $.ajax({
+                      type: "POST",
+                      url:getRootPath()+"/updateUserInfoById",
+                      contentType: "application/json;charset=UTF-8",
+                      dataType: "json",
+                      data:JSON.stringify({
+                          userInfoIds:ids,
+                          flag:"2 "
+                      }),
+                      success:function (data) {
+                          if (data==true){
+                              //发异步把用户状态进行更改
+                              $(obj).attr('title','停用')
+                              $(obj).find('i').html('&#xe62f;');
 
-                //发异步把用户状态进行更改
-                $(obj).attr('title','停用')
-                $(obj).find('i').html('&#xe62f;');
+                              $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                              layer.msg('已停用!',{icon: 5,time:1000});
+                          } else {
+                              layer.msg('数据错误!',{icon: 2,time:1000});
+                          }
 
-                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                layer.msg('已停用!',{icon: 5,time:1000});
+                      },
+                      error:function (data) {
+                          layer.msg('服务器错误!',{icon: 2,time:1000});
+                      }
+                  })
 
               }else{
-                $(obj).attr('title','启用')
-                $(obj).find('i').html('&#xe601;');
 
-                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                layer.msg('已启用!',{icon: 5,time:1000});
+
+                  $.ajax({
+                      type: "POST",
+                      url:getRootPath()+"/updateUserInfoById",
+                      contentType: "application/json;charset=UTF-8",
+                      dataType: "json",
+                      data:JSON.stringify({
+                          userInfoIds:ids,
+                          flag:"1"
+                      }),
+                      success:function (data) {
+                          if (data==true){
+                              //发异步把用户状态进行更改
+                              $(obj).attr('title','启用')
+                              $(obj).find('i').html('&#xe601;');
+
+                              $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                              layer.msg('已启用!',{icon: 6,time:1000});
+                          } else {
+                              layer.msg('数据错误!',{icon: 2,time:1000});
+                          }
+
+                      },
+                      error:function (data) {
+                          layer.msg('服务器错误!',{icon: 2,time:1000});
+                      }
+                  })
+
               }
-              
-          });
-      }
 
+      }
       /*用户-删除*/
       function member_del(obj,id){
+          var ids=new Array()
+          ids.push(id)
           layer.confirm('确认要删除吗？',function(index){
+              $.ajax({
+                  type: "POST",
+                  url:getRootPath()+"/updateUserInfoById",
+                  contentType: "application/json;charset=UTF-8",
+                  dataType: "json",
+                  data:JSON.stringify({
+                      userInfoIds:ids,
+                      flag:"0"
+                  }),
+                  success:function (data) {
+                      if (data==true){
+                          //发异步把用户状态进行更改
+                          layer.msg('已删除!',{icon: 6,time:1000});
+                          location.reload()
+                      } else {
+                          layer.msg('数据错误!',{icon: 2,time:1000});
+                      }
+
+                  },
+                  error:function (data) {
+                      layer.msg('服务器错误!',{icon: 2,time:1000});
+                  }
+              })
               //发异步删除数据
               $(obj).parents("tr").remove();
               layer.msg('已删除!',{icon:1,time:1000});
@@ -128,62 +172,163 @@
 
 
 
-      function delAll (argument) {
+      function delAll (argument,ids) {
 
-        var data = tableCheck.getData();
-  
-        layer.confirm('确认要删除吗？'+data,function(index){
+
+        layer.confirm('确认要删除吗？'+ids,function(index){
+            $.ajax({
+                type: "POST",
+                url:getRootPath()+"/updateUserInfoById",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                data:JSON.stringify({
+                    userInfoIds:ids,
+                    flag:"0"
+                }),
+                success:function (data) {
+                    if (data==true){
+                        //发异步把用户状态进行更改
+                        layer.msg('已删除!',{icon: 6,time:1000});
+                        location.reload()
+                    } else {
+                        layer.msg('数据错误!',{icon: 2,time:1000});
+                    }
+
+                },
+                error:function (data) {
+                    layer.msg('服务器错误!',{icon: 2,time:1000});
+                }
+            })
+
             //捉到所有被选中的，发异步进行删除
             layer.msg('删除成功', {icon: 1});
             $(".layui-form-checked").not('.header').parents('tr').remove();
         });
       }
+
+
+      var split = window.location.search.split("=")[1];
       $.ajax({
           type: "POST",
           url:getRootPath()+"/getUserInfoBy",
           contentType: "application/json;charset=UTF-8",
           dataType: "json",
           data:JSON.stringify({
-              flag:'1'
+              flag:'1',
+              flagf:'2',
+
           }),
           success: function (data) {
-              $("#sumT").html(data.length)
-              console.log(data)
-              $("#sumT").html(data.length)
-              $(data).each(function (index,item) {
+              // console.log(data)
+              layui.use('table', function(){
+                  var table = layui.table;
+                  var form = layui.form;
+                  console.log(data)
+                  //展示已知数据
+                  table.render({
+                      elem: '#ttable'
+                      ,cellMinWidth: 30
+                      ,toolbar: '<xblock>\n' +
+                          '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
+                          '        <button class="layui-btn" onclick="x_admin_show(\'添加用户\',\'./member-add.html\',600,400)"><i class="layui-icon"></i>添加</button>\n' +
+                          '        <span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>\n' +
+                          '      </xblock>'
+                      ,title: '用户数据表'
+                      ,cols: [[ //标题栏
+                          {type:'checkbox'}
+                          ,{field: 'userInfoId', title: 'ID', sort: true}
+                          ,{field: 'username', title: '用户名'}
+                          ,{field: 'sex', title: '性别'}
+                          ,{field: 'phone', title: '手机'}
+                          ,{field: 'email', title: '邮箱'}
+                          ,{field: 'city', title: '城市'}
+                          ,{field: 'registrationDate', title: '加入时间' ,width:200}
+                          , {field: 'status', title: '状态' ,templet:"#btn"}
+                          ,{fixed: '', title:'操作', toolbar: '#barDemo',title:"", width:250}
 
-                  $("<tr>\n" +
-                      "            <td>\n" +
-                      "              <div class=\"layui-unselect layui-form-checkbox\" lay-skin=\"primary\" data-id='"+item.userInfoId+"'><i class=\"layui-icon\">&#xe605;</i></div>\n" +
-                      "            </td>\n" +
-                      "            <td>"+item.userInfoId+"</td>\n" +
-                      "            <td>"+item.username+"</td>\n" +
-                      "            <td>"+item.sex+"</td>\n" +
-                      "            <td>"+item.phone+"</td>\n" +
-                      "            <td>"+item.email+"</td>\n" +
-                      "            <td>"+item.city+"</td>\n" +
-                      "            <td>"+item.registrationDate+"</td>\n" +
-                      "            <td class=\"td-status\">\n" +
-                      "              <span class=\"layui-btn layui-btn-normal layui-btn-sm\">已启用</span></td>\n" +
-                      "            <td class=\"td-manage\">\n" +
-                      "              <a onclick=\"member_stop(this,'10001')\" href=\"javascript:;\"  title=\"启用\">\n" +
-                      "                <i class=\"layui-icon\">&#xe601;</i>\n" +
-                      "              </a>\n" +
-                      "              <a title=\"编辑\"  onclick=\"x_admin_show('编辑','member-edit.html?id='"+item.userInfoId+",600,400)\" href=\"javascript:;\">\n" +
-                      "                <i class=\"layui-icon\">&#xe642;</i>\n" +
-                      "              </a>\n" +
-                      "              <a onclick=\"x_admin_show('修改密码','member-password.html?id='"+item.userInfoId+",600,400)\" title=\"修改密码\" href=\"javascript:;\">\n" +
-                      "                <i class=\"layui-icon\">&#xe631;</i>\n" +
-                      "              </a>\n" +
-                      "              <a title=\"删除\" onclick=\"member_del(this,"+item.userInfoId+")\" href=\"javascript:;\">\n" +
-                      "                <i class=\"layui-icon\">&#xe640;</i>\n" +
-                      "              </a>\n" +
-                      "            </td>\n" +
-                      "          </tr>").insertBefore("#tbody>tr:eq("+index+")")
-              })
+                          // barDemo
+                      ]]
+                      ,data: data.list
+                      // ,skin: 'line' //表格风格
+                      ,even: true
+                      ,page: true //是否显示分页
+                      // ,limits: [5, 7, 10]
+                      ,limit: 5 //每页默认显示的数量
+                  });
+                  table.on('toolbar(test)', function(obj){
+                      var checkStatus = table.checkStatus(obj.config.id);
+                      switch(obj.event){
+                          case 'getCheckData':
+                              var data = checkStatus.data;
+                              // alert(data)
+                              var array = new Array();
+                              $(data).each(function (index,item) {
+                                  array.push(item.userInfoId)
+                              })
+                              // layer.alert(JSON.stringify(array));
+                              delAll('',array)
+                              break;
+                          case 'getCheckLength':
+                              var data = checkStatus.data;
+                              layer.msg('选中了：'+ data.length + ' 个');
+                              break;
+                          case 'isAll':
+                              layer.msg(checkStatus.isAll ? '全选': '未全选');
+                              break;
+                      };
+                  });
+                  //监听行工具事件
+                  table.on('tool(test)', function(obj){
+                      var data = obj.data;
+                      console.log(data.userInfoId)
+                      if(obj.event === 'del'){
+                          layer.confirm('真的删除该会员么', function(index){
+                              // obj.del();
+                              // layer.close(index);
+                              member_del(obj,data.userInfoId)
+                          });
+                      } else if(obj.event === 'edit'){
+                          layer.prompt({
+                              formType: 2
+                              ,value: data.userInfoId
+                          }, function(value, index){
+                              obj.update({
+                                  userInfoId: value
+                              });
+                              layer.close(index);
+                              x_admin_show('修改密码',"member-edit.html?id="+value,600,400)
+                          });
+                      } else if(obj.event === 'editPassword'){
+                          layer.prompt({
+                              formType: 2
+                              ,value: data.username
+                          }, function(value, index){
+                              // obj.update({
+                              //     userInfoId: value
+                              // });
+                              // layer.close(index);
+                              // alert(value)
+                              x_admin_show('修改密码',"member-password.html?username="+value,600,400)
+                          });
+                      }
+                  });
+                  // layer.init()
+                  //监听性别操作
+                  form.on('switch(statusDemo)', function(obj){
+                      if (obj.elem.checked){
+                          member_stop(null,this.value,obj.elem.checked)
+                      } else {
+                          member_stop(null,this.value,obj.elem.checked)
+                      }
+                  });
+                  $("#sumT").html(data.total)
+              });
+
 
           }
       })
+
+
 
     </script>
   </body>

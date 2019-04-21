@@ -19,6 +19,9 @@
       <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="../js/tool.js"></script>
+    <style>
+      .layui-table-page{text-align: center;}
+    </style>
   </head>
   
   <body>
@@ -41,40 +44,30 @@
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
-      <xblock>
-        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','role-add.html')"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>
-      </xblock>
-      <table class="layui-table">
-        <thead>
-          <tr>
-            <th>
-              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-            </th>
-            <th>ID</th>
-            <th>角色名</th>
-            <th>拥有权限规则</th>
-            <th>描述</th>
-            <th>状态</th>
-            <th>操作</th>
-        </thead>
-        <tbody>
-          <tr></tr>
+      <!--<xblock>-->
+        <!--<button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>-->
+        <!--<button class="layui-btn" onclick="x_admin_show('添加用户','role-add.html')"><i class="layui-icon"></i>添加</button>-->
+        <!--<span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>-->
+      <!--</xblock>-->
+      <table class="layui-table" id="ttable" lay-filter="test">
+
         </tbody>
       </table>
       <div class="page">
-        <div>
-          <a class="prev" href="">&lt;&lt;</a>
-          <a class="num" href="">1</a>
-          <span class="current">2</span>
-          <a class="num" href="">3</a>
-          <a class="num" href="">489</a>
-          <a class="next" href="">&gt;&gt;</a>
+        <div id="page">
         </div>
       </div>
 
     </div>
+    <script type="text/html" id="barDemo">
+      <a title="编辑"><i class="layui-icon" lay-event="edit" >&#xe642;</i></a>
+      <a title="删除"><i class="layui-icon" lay-event="del">&#xe640;</i></a>
+    </script>
+
+   <script type="text/html" id="btn">
+       <!-- 这里的 checked 的状态只是演示 -->
+       <input type="checkbox" name="status" value="{{d.roleId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo" {{ d.status == '启用' ? 'checked' : '' }}>
+   </script>
     <script>
       layui.use('laydate', function(){
         var laydate = layui.laydate;
@@ -91,12 +84,11 @@
       });
 
        /*用户-停用*/
-      function member_stop(obj,id){
-          layer.confirm('确认要停用吗？',function(index){
+      function member_stop(obj,id,flag){
               var array = new Array();
               array.push(id)
-              alert(id)
-              if($(obj).attr('title')=='启用'){
+              console.log($(obj).attr('title'))
+              if(!flag){
                       $.ajax({
                           type: "POST",
                           url:getRootPath()+"/updateRoleInfoFlagById",
@@ -155,8 +147,6 @@
 
 
               }
-              
-          });
       }
 
       /*用户-删除*/
@@ -178,6 +168,7 @@
                           //发异步删除数据
                           $(obj).parents("tr").remove();
                           layer.msg('已删除!',{icon:1,time:1000});
+                          location.reload();
                       } else {
                           layer.msg('数据错误!',{icon:1,time:1000});
                       }
@@ -193,19 +184,17 @@
 
 
 
-      function delAll (argument) {
+      function delAll (argument,ids) {
 
-        var data = tableCheck.getData();
-        alert(data)
   
-        layer.confirm('确认要删除吗？'+data,function(index){
+        layer.confirm('确认要删除吗？'+ids,function(index){
             $.ajax({
                 type: "POST",
                 url:getRootPath()+"/updateRoleInfoFlagById",
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
                 data:JSON.stringify({
-                    roleIds:data,
+                    roleIds:ids,
                     flag:'0'
                 }),
                 success:function (data) {
@@ -233,37 +222,146 @@
           dataType: "json",
           data:JSON.stringify({
               flag:'1',
-              flagf:'2'
+              flagf:'2',
           }),
           success: function (data) {
               console.log(data)
-              $("#sumT").html(data.list.length)
+              $("#sumT").html(data.total)
               $(data.list).each(function (index,item) {
+                  // console.log(data)
+                  layui.use('table', function () {
+                      var table = layui.table;
+                      var form = layui.form;
+                      console.log(data)
+                      //展示已知数据
+                      table.render({
+                          elem: '#ttable'
+                          , cellMinWidth: 10
+                          , toolbar: '<xblock>\n' +
+                              '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
+                              '        <button class="layui-btn" onclick="x_admin_show(\'添加用户\',\'role-add.html\')"><i class="layui-icon"></i>添加</button>\n' +
+                              '        <span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>\n' +
+                              '      </xblock>'
 
-                  $("<tr>\n" +
-                      "            <td>\n" +
-                      "              <div class=\"layui-unselect layui-form-checkbox\" lay-skin=\"primary\" data-id='"+item.roleId+"'><i class=\"layui-icon\">&#xe605;</i></div>\n" +
-                      "            </td>\n" +
-                      "            <td>"+item.roleId+"</td>\n" +
-                      "            <td>"+item.roleName+"</td>\n" +
-                      "            <td>"+item.roleDescribe+"</td>\n" +
-                      "            <td>"+item.rule+"</td>\n" +
-                      "            <td class=\"td-status\">\n" +
-                      "              <span class='"+item.flag+"'>已"+item.status+"</span></td>\n" +
-                      "            <td class=\"td-manage\">\n" +
-                      "              <a onclick=\"member_stop(this,"+item.roleId+")\" href=\"javascript:;\"  title=\""+item.status+"\">\n" +
-                      "                <i class=\"layui-icon\">&#xe601;</i>\n" +
-                      "              </a>\n" +
-                      "              <a title=\"编辑\"  onclick=\"x_admin_show('编辑','role-add.html?id='"+item.roleId+")\" href=\"javascript:;\">\n" +
-                      "                <i class=\"layui-icon\">&#xe642;</i>\n" +
-                      "              </a>\n" +
-                      "              <a title=\"删除\" onclick=\"member_del(this,"+item.roleId+")\" href=\"javascript:;\">\n" +
-                      "                <i class=\"layui-icon\">&#xe640;</i>\n" +
-                      "              </a>\n" +
-                      "            </td>\n" +
-                      "          </tr>").insertBefore(".layui-table>tbody>tr:eq("+index+")")
-              })
+                          , cols: [[ //标题栏
+                              {type: 'checkbox'}
+                              , {field: 'roleId', title: 'ID', sort: true}
+                              , {field: 'roleName', title: '角色名'}
+                              , {field: 'rule', title: '拥有权限规则'}
+                              , {field: 'roleDescribe', title: '描述'}
+                              , {field: 'status', title: '状态' ,templet:"#btn"
+                                  // templet:function (d) {
+                                  //     if (d.status=="启用") {
+                                  //         return "<div class=\"layui-form-item\">\n" +
+                                  //             "    <label class=\"layui-form-label\"></label>\n" +
+                                  //             "    <div class=\"layui-input-block\">\n" +
+                                  //             "      <input type=\"checkbox\" checked=\"\" name=\"open\" lay-event='on' lay-skin=\"switch\" lay-filter=\"switchTest\" lay-text=\"启用|禁用\">\n" +
+                                  //             "    </div>\n" +
+                                  //             "  </div>"
+                                  //     }else {
+                                  //         return "<div class=\"layui-form-item\">\n" +
+                                  //             "    <label class=\"layui-form-label\"></label>\n" +
+                                  //             "    <div class=\"layui-input-block\">\n" +
+                                  //             "      <input type=\"checkbox\" lay-filter=\"switchTest\" lay-event='on' name=\"close\" lay-skin=\"switch\" lay-text=\"启用|禁用\">\n" +
+                                  //             "    </div>\n" +
+                                  //             "  </div>"
+                                  //     }
+                                  // }
+                              }
+                              , {fixed: '', title: '操作', toolbar: '#barDemo', title: "", width: 250}
 
+                              // barDemo
+                          ]]
+                          , data: data.list
+                          // ,skin: 'line' //表格风格
+                          , even: true
+                          , page: true //是否显示分页
+                          // ,limits: [5, 7, 10]
+                          , limit: 5 //每页默认显示的数量
+                      });
+                      table.on('toolbar(test)', function (obj) {
+                          var checkStatus = table.checkStatus(obj.config.id);
+                          switch (obj.event) {
+                              case 'getCheckData':
+                                  var data = checkStatus.data;
+                                  // alert(data)
+                                  var array = new Array();
+                                  $(data).each(function (index, item) {
+                                      console.log(item.roleId)
+                                      array.push(item.roleId)
+                                  })
+                                  delAll(this, array)
+                                  break;
+                              case 'getCheckLength':
+                                  var data = checkStatus.data;
+                                  layer.msg('选中了：' + data.length + ' 个');
+                                  break;
+                              case 'isAll':
+                                  layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                                  break;
+                          }
+                          ;
+                      });
+                      //监听行工具事件
+                      table.on('tool(test)', function (obj) {
+                          var data = obj.data;
+                          console.log(data.roleId)
+                          if (obj.event === 'del') {
+                              layer.confirm('真的删除该管理类型吗', function (index) {
+                                  // obj.del();
+                                  // layer.close(index);
+                                  member_del(obj, data.roleId)
+                              });
+                          } else if (obj.event === 'edit') {
+                              layer.prompt({
+                                  formType: 2
+                                  , value: data.roleId
+                              }, function (value, index) {
+                                  obj.update({
+                                      userInfoId: value
+                                  });
+                                  layer.close(index);
+                                  x_admin_show('编辑', "role-add.html?id=" + value, 600, 400)
+                              });
+                          }else if (obj.event === 'stop') {
+                              layer.prompt({
+                                  formType: 2
+                                  , value: data.roleId
+                              }, function (value, index) {
+                                  // obj.update({
+                                  //     userInfoId: value
+                                  // });
+                                  // layer.close(index);
+                                  member_stop(obj,value)
+                              });
+                          }else if (obj.event === 'on') {
+                              alert("aaa")
+                              layer.prompt({
+                                  formType: 2
+                                  , value: data.roleId
+                              }, function (value, index) {
+                                  // obj.update({
+                                  //     userInfoId: value
+                                  // });
+                                  // layer.close(index);
+                                  // member_stop(obj,value)
+                              });
+                          }
+                      });
+
+                      //监听性别操作
+                      form.on('switch(statusDemo)', function(obj){
+                          if (obj.elem.checked){
+                              member_stop(null,this.value,obj.elem.checked)
+                          } else {
+                              member_stop(null,this.value,obj.elem.checked)
+                          }
+                      });
+
+                      // layer.init()
+                      $("#sumT").html(data.total)
+                  });
+              });
           }
       })
     </script>

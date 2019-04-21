@@ -47,6 +47,7 @@ public class RoleInfoController {
      */
     @RequestMapping(value = "getUserRoleInfoAll",method = RequestMethod.POST)
     public Object getUserRoleInfoAll(@RequestBody(required = false)  RoleInfoVo roleInfoVo){
+        System.out.println(roleInfoVo);
         PageHelper.startPage(roleInfoVo.getCurrentPage(),roleInfoVo.getPageSize());
         List<UserInfoDto> infoAll = service.getUserRoleInfoAll(roleInfoVo);
         PageInfo info = new PageInfo(infoAll);
