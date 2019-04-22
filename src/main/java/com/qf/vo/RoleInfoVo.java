@@ -1,6 +1,8 @@
 package com.qf.vo;
 
 
+import java.util.Arrays;
+
 public class RoleInfoVo {
 
   private long roleId;
@@ -9,8 +11,17 @@ public class RoleInfoVo {
   private String rule;
   private int flag=-1;
   private int flagf=-1;
-  private Integer pageSize=5;
+  private Integer pageSize=100;
   private Integer currentPage=1;
+  private Integer[] roleIds;
+
+  public Integer[] getRoleIds() {
+    return roleIds;
+  }
+
+  public void setRoleIds(Integer[] roleIds) {
+    this.roleIds = roleIds;
+  }
 
   public Integer getPageSize() {
     return pageSize;
@@ -87,7 +98,11 @@ public class RoleInfoVo {
             ", roleName='" + roleName + '\'' +
             ", roleDescribe='" + roleDescribe + '\'' +
             ", rule='" + rule + '\'' +
-            ", flag='" + flag + '\'' +
+            ", flag=" + flag +
+            ", flagf=" + flagf +
+            ", pageSize=" + pageSize +
+            ", currentPage=" + currentPage +
+            ", roleIds=" + Arrays.toString(roleIds) +
             '}';
   }
 }

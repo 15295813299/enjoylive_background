@@ -23,6 +23,7 @@
       .current{
         background-color: #40AFFE;
       }
+       .layui-table-page{text-align: center;}
     </style>
   </head>
   
@@ -46,42 +47,20 @@
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
-      <xblock>
-        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','./admin-add.html')"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：<span id="sumT">0</span> 条</span>
-      </xblock>
-      <table class="layui-table">
-        <thead>
-          <tr>
-            <th>
-              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-            </th>
-            <th>ID</th>
-            <th>登录名</th>
-            <th>手机</th>
-            <th>邮箱</th>
-            <th>角色</th>
-            <th>加入时间</th>
-            <th>状态</th>
-            <th>操作</th>
-        </thead>
-        <tbody>
-          <tr></tr>
-        </tbody>
+      <table class="layui-table" id="ttable" lay-filter="test">
+
       </table>
-      <div class="page" >
-        <div id="page">
-          <!--<a class="prev" onclick="pageChange()" href="">&lt;&lt;</a>-->
-          <!--<a class="num" href="">1</a>-->
-          <!--<span class="current">2</span>-->
-          <!--<a class="num" href="">3</a>-->
-          <!--<a class="num" href="">489</a>-->
-          <!--<a class="next" href="">&gt;&gt;</a>-->
-        </div>
-      </div>
 
     </div>
+    <script type="text/html" id="barDemo">
+      <a title="编辑"><i class="layui-icon" lay-event="edit" >&#xe642;</i></a>
+      <a title="删除"><i class="layui-icon" lay-event="del">&#xe640;</i></a>
+    </script>
+
+    <script type="text/html" id="btn">
+      <!-- 这里的 checked 的状态只是演示 -->
+      <input type="checkbox" name="status" value="{{d.userInfoId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo" {{ d.status == '启用' ? 'checked' : '' }}>
+    </script>
     <script>
       layui.use('laydate', function(){
         var laydate = layui.laydate;
@@ -98,10 +77,8 @@
       });
 
        /*用户-停用*/
-      function member_stop(obj,id){
-          layer.confirm('确认要修改吗？',function(index){
-
-              if($(obj).attr('title')=='启用'){
+      function member_stop(obj,id,flag){
+              if(!flag){
 
                   $.ajax({
                       type: "POST",
@@ -139,13 +116,11 @@
                           $(obj).find('i').html('&#xe601;');
 
                           $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                          layer.msg('已启用!',{icon: 5,time:1000});
+                          layer.msg('已启用!',{icon: 6,time:1000});
                       }
                   })
 
               }
-              
-          });
       }
 
       /*用户-删除*/
@@ -169,10 +144,10 @@
                   },
                   success:function (data) {
                       if (data==true){
-                          alert("删除成功");
+                          layer.msg('已删除!',{icon: 6,time:2000});
                           location.reload();
                       }else {
-                          alert("删除失败,请重新提交！");
+                          layer.msg('删除失败,请重新提交！',{icon: 5,time:2000});
                       }
                   }
               })
@@ -181,11 +156,7 @@
 
 
 
-      function delAll (argument) {
-
-        var ids = tableCheck.getData();
-        alert(ids)
-  
+      function delAll (argument,ids) {
         layer.confirm('确认要删除吗？'+ids,function(index){
             //捉到所有被选中的，发异步进行删除
             // layer.msg('删除成功', {icon: 1});
@@ -206,87 +177,136 @@
                 },
                 success:function (data) {
                     if (data==true){
-                        alert("删除成功");
+                        layer.msg('已删除!',{icon: 6,time:2000});
                         location.reload();
                     }else {
-                        alert("删除失败,请重新提交！");
+                        layer.msg('删除失败,请重新提交！',{icon: 5,time:2000});
                     }
                 }
             })
         });
       }
 
-
-      var split = window.location.search.split("=")[1];
-
       $.ajax({
           type: "POST",
-          url:getRootPath()+"/getUserRoleInfoAll",
+          url: getRootPath() + "/getUserRoleInfoAll",
           contentType: "application/json;charset=UTF-8",
           dataType: "json",
-          data:JSON.stringify({
-              flag:'1',
-              flagf:'2',
-              currentPage:parseInt(split)
+          data: JSON.stringify({
+              flag: '1',
+              flagf: '2',
           }),
           success: function (data) {
               console.log(data)
-              $("#sumT").html(data.length)
-              $(data.list).each(function (index,item) {
-                  $("<tr>\n" +
-                      "            <td>\n" +
-                      "              <div class=\"layui-unselect layui-form-checkbox\" lay-skin=\"primary\" data-id='"+item.userInfoId+"'><i class=\"layui-icon\">&#xe605;</i></div>\n" +
-                      "            </td>\n" +
-                      "            <td>"+item.userInfoId+"</td>\n" +
-                      "            <td>"+item.username+"</td>\n" +
-                      "            <td>"+item.phone+"</td>\n" +
-                      "            <td>"+item.email+"</td>\n" +
-                      "            <td><span id='roleName"+index+"'></span></td>\n" +
-                      "            <td>"+item.registrationDate+"</td>\n" +
-                      "            <td class=\"td-status\">\n" +
-                      "              <span class='"+item.flag+"'>已"+item.status+"</span></td>\n" +
-                      "            <td class=\"td-manage\">\n" +
-                      "              <a onclick=\"member_stop(this,"+item.userInfoId+")\" href=\"javascript:;\"  title=\""+item.status+"\">\n" +
-                      "                <i class=\"layui-icon\">&#xe601;</i>\n" +
-                      "              </a>\n" +
-                      "              <a title=\"编辑\"  onclick=\"x_admin_show('编辑','admin-edit.html?id="+item.userInfoId+"')\" href=\"javascript:;\">\n" +
-                      "                <i class=\"layui-icon\">&#xe642;</i>\n" +
-                      "              </a>\n" +
-                      "              <a title=\"删除\" onclick=\"member_del(this,"+item.userInfoId+")\" href=\"javascript:;\">\n" +
-                      "                <i class=\"layui-icon\">&#xe640;</i>\n" +
-                      "              </a>\n" +
-                      "            </td>\n" +
-                      "          </tr>").insertBefore(".layui-table>tbody>tr:eq("+index+")")
+              $("#sumT").html(data.total)
+              $(data.list).each(function (index, item) {
 
-                  var s="";
-                  $(item.roleInfoDto).each(function (index1, item) {
-                      s+=item.roleName+"丶";
+                  layui.use('table', function () {
+                      var table = layui.table;
+                      var form = layui.form;
+                      console.log(data)
+                      //展示已知数据
+                      table.render({
+                          elem: '#ttable'
+                          , cellMinWidth: 10
+                          , toolbar: '<xblock>\n' +
+                              '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
+                              '        <button class="layui-btn" onclick="x_admin_show(\'添加用户\',\'role-add.html\')"><i class="layui-icon"></i>添加</button>\n' +
+                              '        <span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>\n' +
+                              '      </xblock>'
 
+                          , cols: [[ //标题栏
+                              {type: 'checkbox'}
+                              , {field: 'userInfoId', title: 'ID', sort: true}
+                              , {field: 'username', title: '账号'}
+                              , {field: 'phone', title: '电话'}
+                              , {field: 'email', title: '邮箱'}
+                              , {field: 'roles', title: '角色'}
+                              , {field: 'registrationDate', title: '加入时间'}
+                              , {field: 'status', title: '状态', templet: "#btn"}
+                              , {fixed: '', title: '操作', toolbar: '#barDemo', title: "", width: 250}
+
+                              // barDemo
+                          ]]
+                          , data: data.list
+                          // ,skin: 'line' //表格风格
+                          , even: true
+                          , page: true //是否显示分页
+                          // ,limits: [5, 7, 10]
+                          , limit: 5 //每页默认显示的数量
+                      });
+                      //监听行工具事件
+                      table.on('tool(test)', function (obj) {
+                          var data = obj.data;
+                          if (obj.event === 'del') {
+                              layer.confirm('真的删除该管理员吗', function (index) {
+                                  // obj.del();
+                                  // layer.close(index);
+                                  member_del(obj, data.userInfoId)
+                              });
+                          } else if (obj.event === 'edit') {
+                              layer.prompt({
+                                  formType: 2
+                                  , value: data.userInfoId
+                              }, function (value, index) {
+                                  obj.update({
+                                      userInfoId: value
+                                  });
+                                  layer.close(index);
+                                  x_admin_show('编辑', "admin-edit.html?id=" + value, 600, 400)
+                              });
+                          }else if (obj.event === 'stop') {
+                              layer.prompt({
+                                  formType: 2
+                                  , value: data.userInfoId
+                              }, function (value, index) {
+                                  // obj.update({
+                                  //     userInfoId: value
+                                  // });
+                                  // layer.close(index);
+                                  member_stop(obj,value)
+                              });
+                          }
+                      });
+
+                      table.on('toolbar(test)', function (obj) {
+                          var checkStatus = table.checkStatus(obj.config.id);
+                          switch (obj.event) {
+                              case 'getCheckData':
+                                  var data = checkStatus.data;
+                                  // alert(data)
+                                  var array = new Array();
+                                  $(data).each(function (index, item) {
+                                      console.log(item.userInfoId)
+                                      array.push(item.userInfoId)
+                                  })
+                                  delAll(this, array)
+                                  break;
+                              case 'getCheckLength':
+                                  var data = checkStatus.data;
+                                  layer.msg('选中了：' + data.length + ' 个');
+                                  break;
+                              case 'isAll':
+                                  layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                                  break;
+                          }
+                          ;
+                      });
+
+                      //监听性别操作
+                      form.on('switch(statusDemo)', function(obj){
+                          if (obj.elem.checked){
+                              member_stop(null,this.value,obj.elem.checked)
+                          } else {
+                              member_stop(null,this.value,obj.elem.checked)
+                          }
+                      });
+
+                      // layer.init()
+                      $("#sumT").html(data.total)
                   })
-                  s = s.substring(0, s.lastIndexOf('丶'))
-                  $("#"+"roleName"+index+"").html(s)
+
               })
-
-              var s=""
-              if (data.hasPreviousPage==false){
-                  s+="<a class=\"prev\" onclick=\"\" href='admin-list.html?page="+data.lastPage+"'>&lt;&lt;</a>"
-              }else {
-                  s+="<a class=\"prev\" onclick=\"\" href='admin-list.html?page="+data.prePage+"'>&lt;&lt;</a>"
-              }
-              for (var i = 1; i <=data.lastPage ; i++) {
-                  if (i==data.pageNum) {
-                      s+="<span class=\"current\">"+i+"</span>"
-                  }else {
-                      s+="<a class=\"num\" href='admin-list.html?page="+i+"' onclick='pageChange("+i+")'>"+i+"</a>"
-                  }
-              }
-              if (data.hasNextPage==false){
-                  s+="<a class=\"prev\" href='admin-list.html?page=1'>&gt;&gt;</a>"
-              }else {
-                  s+="<a class=\"prev\" href='admin-list.html?page="+data.nextPage+"'>&gt;&gt;</a>"
-              }
-
-              $("#page").html(s)
           }
       })
     </script>

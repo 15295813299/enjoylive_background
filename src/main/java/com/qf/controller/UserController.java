@@ -1,5 +1,8 @@
 package com.qf.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.qf.dto.RoleInfoDto;
 import com.qf.dto.UserInfoDto;
 import com.qf.service.UserInfoService;
 import com.qf.tools.Md5Utils;
@@ -54,7 +57,10 @@ public class UserController {
      */
     @RequestMapping(value = "getUserInfoBy",method = RequestMethod.POST)
     public Object getUserInfoBy(@RequestBody(required = false) UserInfoVo userInfoVo){
-        return service.getUserInfoBy(userInfoVo);
+        PageHelper.startPage(userInfoVo.getCurrentPage(), userInfoVo.getPageSize());
+        List<UserInfoDto> roleInfoAll = service.getUserInfoBy(userInfoVo);
+        PageInfo info = new PageInfo(roleInfoAll);
+        return info;
     }
 
 
@@ -72,5 +78,21 @@ public class UserController {
         }
         vo.setPassword(password);
         return service.addUserRole(vo);
+    }
+
+    /**
+     * 根据id修改用户信息
+     */
+    @RequestMapping(value = "updateUserInfoById",method = RequestMethod.POST)
+    Boolean updateUserInfoById(@RequestBody UserInfoVo vo){
+        String password = vo.getPassword();
+        if (password!=null||"".equals(password)){
+            for (int i = 0; i < 3; i++) {
+                password = Md5Utils.encodePassword(password+password);
+            }
+
+            vo.setPassword(password);
+        }
+        return service.updateUserInfoById(vo);
     }
 }

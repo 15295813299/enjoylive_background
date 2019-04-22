@@ -40,7 +40,7 @@ public interface RoleInfoService{
      * @param array
      * @return
      */
-    Boolean delRoleInfo(String[] array);
+    Boolean delUserRole(String[] array);
 
     /**
      * 获取某个管理员有的权限，以及未获得的权限
@@ -60,4 +60,11 @@ public interface RoleInfoService{
      * @return
      */
     public Boolean userRoleForbidden(@RequestBody UserInfoVo vo);
+
+    /**
+     * 修改状态
+     * @param roleInfoVo
+     * @return
+     */
+    Boolean updateRoleInfoFlagById(RoleInfoVo roleInfoVo);
 }

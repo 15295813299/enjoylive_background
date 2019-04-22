@@ -41,8 +41,8 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         return roleInfoMapper.getRoleInfoAll(roleInfoVo);
     }
 
-    public Boolean delRoleInfo(String[] array) {
-        Integer info = roleInfoMapper.delRoleInfo(array);
+    public Boolean delUserRole(String[] array) {
+        Integer info = roleInfoMapper.delUserRole(array);
         if (info>0){
             return true;
         }
@@ -83,6 +83,14 @@ public class RoleInfoServiceImpl implements RoleInfoService {
 
     public Boolean userRoleForbidden(UserInfoVo vo) {
         int i = roleInfoMapper.updateUserRole(vo);
+        if (i>0){
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean updateRoleInfoFlagById(RoleInfoVo roleInfoVo) {
+        int i = roleInfoMapper.updateRoleInfoFlagById(roleInfoVo);
         if (i>0){
             return true;
         }

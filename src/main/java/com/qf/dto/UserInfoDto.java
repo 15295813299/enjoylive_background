@@ -17,7 +17,7 @@ public class UserInfoDto {
   private String country;
   private String province;
   private String city;
-  private long brief;
+  private String brief;
   private String registrationDate;
   private String birthYear;
   private String birthMonth;
@@ -26,6 +26,16 @@ public class UserInfoDto {
   private String status;
   private Integer pageSize=5;
   private Integer currentPage=1;
+  private List<RoleInfoDto> roleInfoDto;
+  private String roles;
+
+  public String getRoles() {
+    return roles;
+  }
+
+  public void setRoles(String roles) {
+    this.roles = roles;
+  }
 
   public Integer getPageSize() {
     return pageSize;
@@ -43,7 +53,7 @@ public class UserInfoDto {
     this.currentPage = currentPage;
   }
 
-  private List<RoleInfoDto> roleInfoDto;
+
 
   public long getUserInfoId() {
     return userInfoId;
@@ -143,11 +153,11 @@ public class UserInfoDto {
   }
 
 
-  public long getBrief() {
+  public String getBrief() {
     return brief;
   }
 
-  public void setBrief(long brief) {
+  public void setBrief(String brief) {
     this.brief = brief;
   }
 
@@ -214,6 +224,16 @@ public class UserInfoDto {
   }
 
   public List<RoleInfoDto> getRoleInfoDto() {
+    if (roleInfoDto!=null){
+      roles="";
+      for (RoleInfoDto dto : roleInfoDto) {
+        roles+=dto.getRoleName()+" ";
+      }
+
+    }
+
+
+
     return roleInfoDto;
   }
 

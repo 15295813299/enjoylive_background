@@ -36,7 +36,7 @@ public interface RoleInfoMapper {
      * @param array
      * @return
      */
-    Integer delRoleInfo(String[] array);
+    Integer delUserRole(String[] array);
 
     /**
      * 获取某个管理员有的权限，以及未获得的权限
@@ -55,4 +55,11 @@ public interface RoleInfoMapper {
      * @return
      */
     int addUserRole(UserInfoVo vo);
+
+    /**
+     * 修改状态
+     * @param roleInfoVo
+     * @return
+     */
+    int updateRoleInfoFlagById(RoleInfoVo roleInfoVo);
 }

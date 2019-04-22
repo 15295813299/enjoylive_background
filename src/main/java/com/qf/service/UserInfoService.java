@@ -25,5 +25,8 @@ public interface UserInfoService {
      */
     Boolean addUserRole(AdminAddVo vo);
 
-
+    /**
+     * 根据id修改用户信息
+     */
+    Boolean updateUserInfoById(UserInfoVo vo);
 }
