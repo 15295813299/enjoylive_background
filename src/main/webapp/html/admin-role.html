@@ -32,8 +32,9 @@
         <a>
           <cite>导航元素</cite></a>
       </span>
-      <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-        <i class="layui-icon" style="line-height:38px">ဂ</i></a>
+      <a class="layui-btn layui-btn-primary layui-btn-small" style="margin-top:3px;float:right"
+         href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon layui-icon-refresh-3" style=""></i></a>
     </div>
     <div class="x-body">
       <div class="layui-row">
@@ -44,11 +45,6 @@
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
-      <!--<xblock>-->
-        <!--<button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>-->
-        <!--<button class="layui-btn" onclick="x_admin_show('添加用户','role-add.html')"><i class="layui-icon"></i>添加</button>-->
-        <!--<span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>-->
-      <!--</xblock>-->
       <table class="layui-table" id="ttable" lay-filter="test">
 
         </tbody>
@@ -240,7 +236,6 @@
                           , toolbar: '<xblock>\n' +
                               '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
                               '        <button class="layui-btn" onclick="x_admin_show(\'添加用户\',\'role-add.html\')"><i class="layui-icon"></i>添加</button>\n' +
-                              '        <span class="x-right" style="line-height:40px">共有数据：<span id="sumT"></span> 条</span>\n' +
                               '      </xblock>'
 
                           , cols: [[ //标题栏
@@ -250,23 +245,6 @@
                               , {field: 'rule', title: '拥有权限规则'}
                               , {field: 'roleDescribe', title: '描述'}
                               , {field: 'status', title: '状态' ,templet:"#btn"
-                                  // templet:function (d) {
-                                  //     if (d.status=="启用") {
-                                  //         return "<div class=\"layui-form-item\">\n" +
-                                  //             "    <label class=\"layui-form-label\"></label>\n" +
-                                  //             "    <div class=\"layui-input-block\">\n" +
-                                  //             "      <input type=\"checkbox\" checked=\"\" name=\"open\" lay-event='on' lay-skin=\"switch\" lay-filter=\"switchTest\" lay-text=\"启用|禁用\">\n" +
-                                  //             "    </div>\n" +
-                                  //             "  </div>"
-                                  //     }else {
-                                  //         return "<div class=\"layui-form-item\">\n" +
-                                  //             "    <label class=\"layui-form-label\"></label>\n" +
-                                  //             "    <div class=\"layui-input-block\">\n" +
-                                  //             "      <input type=\"checkbox\" lay-filter=\"switchTest\" lay-event='on' name=\"close\" lay-skin=\"switch\" lay-text=\"启用|禁用\">\n" +
-                                  //             "    </div>\n" +
-                                  //             "  </div>"
-                                  //     }
-                                  // }
                               }
                               , {fixed: '', title: '操作', toolbar: '#barDemo', title: "", width: 250}
 
