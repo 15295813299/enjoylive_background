@@ -1,6 +1,8 @@
 package com.qf.pojo;
 
 
+import java.util.List;
+
 public class ArticleInfo {
 
   private long articleId;
@@ -73,5 +75,6 @@ public class ArticleInfo {
   public void setFlag(String flag) {
     this.flag = flag;
   }
+
 
 }

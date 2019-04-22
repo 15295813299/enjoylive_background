@@ -3,7 +3,7 @@
   
   <head>
     <meta charset="UTF-8">
-    <title>欢迎页面-L-admin1.0</title>
+    <title>编辑</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -13,11 +13,23 @@
     <script src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="../js/xadmin.js"></script>
+    <script type="text/javascript" src="../js/tool.js"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
       <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
       <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <style type="text/css">
+      .layui-input-inline {
+        width: 20%;
+        height: 50px;
+      }
+      .check,.cckk{
+        height: 20px;
+        width: 20px;
+      }
+    </style>
   </head>
   
   <body>
@@ -33,15 +45,12 @@
     </div>
     <div class="x-body">
       <div class="layui-row">
-        <form class="layui-form layui-col-md12 x-so">
-          <input type="text" name=""  placeholder="文章标题" autocomplete="off" class="layui-input">
-          <input type="text" name=""  placeholder="发表用户" autocomplete="off" class="layui-input">
-         
-          <div class="layui-input-inline">
-            <select name="contrller">
-              <option>文章栏目</option>
-              <option>旅游</option>
-              <option>游戏</option>
+          <input type="text" name="" id="title"  placeholder="文章标题" autocomplete="off" class="layui-input layui-input-inline">
+          <input type="text" name="" id="name"  placeholder="发表用户" autocomplete="off" class="layui-input layui-input-inline">
+
+          <div class="layui-input-inline" >
+            <select name="contrller" id="column">
+              <option value="">文章栏目</option>
             </select>
           </div>
           <div class="layui-input-inline">
@@ -52,32 +61,39 @@
               <option>一个月后</option>
             </select>
           </div>
+
           
       
-          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
-        </form>
+          <button class="layui-btn" onclick="init(1)"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+
+
       </div>
       <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','./order-add.html')"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：88 条</span>
+        <span class="x-right" style="line-height:40px" id="count"></span>
       </xblock>
       <table class="layui-table">
         <thead>
           <tr>
             <th>
-              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+                <input type="checkbox" class="cckk"  onclick="cckk(this)">
             </th>
             <th>文章ID</th>
             <th>发表用户</th>
             <th>文章标题</th>
+            <th>文章类型</th>
             <th>游览量</th>
             <th>点赞数</th>
             <th>评论操作</th>
             <th >文章操作</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="table">
+
+        </tbody>
+      </table>
+      <div class="page">
+        <div id="page">
           <tr>
             <td>
               <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
@@ -97,40 +113,128 @@
               </a>
             </td>
           </tr>
-        </tbody>
-      </table>
-      <div class="page">
-        <div>
-          <a class="prev" href="">&lt;&lt;</a>
-          <a class="num" href="">1</a>
-          <span class="current">2</span>
-          <a class="num" href="">3</a>
-          <a class="num" href="">489</a>
-          <a class="next" href="">&gt;&gt;</a>
         </div>
+
       </div>
 
     </div>
-    <script>
-      layui.use('laydate', function(){
+
+  <script type="text/javascript">
+
+    init(1);
+    function init(current) {
+        $("#table").empty("");
+        $("#page").empty("");
+        var title = $("#title").val();
+        $.ajax({
+            url:getRootPath()+"/getArticleInfo",
+            type:"POST",
+            contentType:'application/json; charset=utf-8',
+            data:JSON.stringify({
+                "currentPage":current,
+                "categoryId":$("#column").val(),
+                "userName":$("#name").val(),
+                "title":title
+            }),
+            success:function (resp) {
+                console.log(resp);
+                $("#count").html("共有数据："+resp.total);
+                $(resp.list).each(function (index, item) {
+                  $("#table").append($("<tr>" +
+                      "<td>" +
+                      "<input type=\"checkbox\" class=\"check \" value='"+item.articleId+"' onclick='anxia(this)' />" +
+                      "</td>" +
+                      "<td>"+item.articleId+"</td>" +
+                      "<td>"+item.userName+"</td>" +
+                      "<td>"+item.title+"</td>" +
+                      "<td>"+item.cName+"</td>" +
+                      "<td>"+item.sumBro+"</td>" +
+                      "<td>"+item.sumSup+"</td>" +
+                      "<td>暂无</td>" +
+                      "<td class=\"td-manage\">" +
+                      "<a title=\"查看\"  onclick=\"shows("+item.articleId+")\" href=\"javascript:;\">" +
+                      "<i class=\"layui-icon\">&#xe63c;</i>" +
+                      "</a>" +
+                      "<a title=\"删除\" onclick=\"member_del(this,'"+item.articleId+"')\">"+
+                      "<i class=\"layui-icon\">&#xe640;</i>"+
+                      "</td>" +
+                      "</tr>"))
+                });
+                if (resp.pageNum==1){
+                    $("#page").append($("<a class=\"prev\">&lt;&lt;</a>"));
+                }else {
+                    $("#page").append($("<a class=\"prev\" onclick='init("+resp.prePage+")'>&lt;&lt;</a>"));
+                }
+
+                for (var i=1;i<=resp.lastPage;i++){
+                    if (resp.pageNum==i){
+                        $("#page").append($(" <span onclick='init("+i+")' class=\"current\">"+i+"</span>"))
+                    }else {
+                        $("#page").append($("<a class=\"num\" onclick='init("+i+")'>"+i+"</a>"))
+                    }
+
+                }
+                if (resp.pageNum==resp.lastPage){
+                    $("#page").append($("<a class=\"next\">&gt;&gt;</a>"));
+                } else {
+                    $("#page").append($("<a class=\"next\" onclick='init("+resp.nextPage+")'>&gt;&gt;</a>"));
+                }
+
+            },
+            error:function () {
+                alert("加载失败")
+            },
+            dataType:"json",
+
+        })
+
+    }
+
+
+
+
+    initArticleInfo();
+    function initArticleInfo() {
+        $.ajax({
+            url:getRootPath()+"/getCategory",
+            type:"POST",
+            contentType:'application/json; charset=utf-8',
+            success:function (resp) {
+                console.log(resp);
+                $(resp).each(function (index, item) {
+                    $("#column").append($(" <option  value='"+item.categoryId+"'>"+item.categoryName+"</option>"))
+                })
+
+            },
+            error:function () {
+                alert("加载类型失败");
+            }
+        })
+    }
+
+
+
+
+
+    layui.use('laydate', function(){
         var laydate = layui.laydate;
-        
+
         //执行一个laydate实例
         laydate.render({
-          elem: '#start' //指定元素
+            elem: '#start' //指定元素
         });
 
         //执行一个laydate实例
         laydate.render({
-          elem: '#end' //指定元素
+            elem: '#end' //指定元素
         });
-      });
+    });
 
-       /*用户-停用*/
-      function member_stop(obj,id){
-          layer.confirm('确认要停用吗？',function(index){
+    /*用户-停用*/
+    function member_stop(obj,id){
+        layer.confirm('确认要停用吗？',function(index){
 
-              if($(obj).attr('title')=='启用'){
+            if($(obj).attr('title')=='启用'){
 
                 //发异步把用户状态进行更改
                 $(obj).attr('title','停用')
@@ -139,39 +243,99 @@
                 $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
                 layer.msg('已停用!',{icon: 5,time:1000});
 
-              }else{
-                $(obj).attr('title','启用')
+            }else{
+                $(obj).attr('title','启用');
                 $(obj).find('i').html('&#xe601;');
 
                 $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
                 layer.msg('已启用!',{icon: 5,time:1000});
-              }
-              
-          });
-      }
+            }
 
-      /*用户-删除*/
-      function member_del(obj,id){
-          layer.confirm('确认要删除吗？',function(index){
-              //发异步删除数据
-              $(obj).parents("tr").remove();
-              layer.msg('已删除!',{icon:1,time:1000});
-          });
-      }
-
-
-
-      function delAll (argument) {
-
-        var data = tableCheck.getData();
-  
-        layer.confirm('确认要删除吗？'+data,function(index){
-            //捉到所有被选中的，发异步进行删除
-            layer.msg('删除成功', {icon: 1});
-            $(".layui-form-checked").not('.header').parents('tr').remove();
         });
-      }
-    </script>
+    }
+
+    /*用户-删除*/
+    function member_del(obj,id){
+        var ids= new Array();
+        ids.push(id);
+        $.ajax({
+            url:getRootPath()+"/upArticle",
+            type:"POST",
+            contentType:'application/json; charset=utf-8',
+            data:JSON.stringify({
+                "unIds":ids
+            }),
+            success:function (resp) {
+               alert("删除成功");
+                init(1);
+            },
+            error:function () {
+                alert("删除失败")
+            }
+        });
+
+    }
+
+
+
+    function delAll () {
+        var ids= new Array();
+        $(".check").each(function (index, item) {
+            if ($(this).prop("checked")){
+                ids.push($(this).val());
+            }
+        });
+        $.ajax({
+            url:getRootPath()+"/upArticle",
+            type:"POST",
+            contentType:'application/json; charset=utf-8',
+            data:JSON.stringify({
+                "unIds":ids
+            }),
+            success:function (resp) {
+                alert("删除成功");
+                init(1);
+            },
+            error:function () {
+                alert("删除失败");
+            }
+        });
+    }
+
+    var checkCount=0;
+    function anxia(obj) {
+        if ($(obj).prop("checked")){
+            checkCount++;
+        }else {
+            checkCount--;
+        }
+        if (checkCount==$(".check").length){
+            $(".cckk").prop("checked","checked");
+        }else {
+            $(".cckk").prop("checked",false);
+        }
+    }
+    function cckk(obj) {
+        if ($(obj).prop("checked")) {
+            $(".check").prop("checked","checked");
+            checkCount=$(".heck").length;
+        }else {
+            $(".check").prop("checked",false);
+            checkCount=0;
+        }
+    }
+
+    function shows(id) {
+        window.open("order-view.html?id="+id,"","width=700,height=600,top=160,left=480")
+    }
+
+
+
+
+
+  </script>
+
+
   </body>
 
 </html>

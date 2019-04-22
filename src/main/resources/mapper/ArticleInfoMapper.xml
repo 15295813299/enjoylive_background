@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qf.mapper.ArticleInfoMapper">
+
+    <select id="getArticleInfo" parameterType="com.qf.dto.ArticleInfoDto" resultType="com.qf.dto.ArticleInfoDto">
+        SELECT vv.*, bb.sumBro
+        FROM (
+        SELECT ss.*, cc.sum AS sumSup
+        FROM (
+        SELECT vc.*, cf.categoryName AS cName
+        FROM (
+        SELECT a.*, u.`name` AS userName
+        FROM articleInfo a
+        LEFT JOIN userInfo u ON u.userInfoId = a.userInfoId
+        WHERE a.flag = 1
+        ) vc
+        LEFT JOIN category cf ON cf.categoryId = vc.categoryId
+        ) ss
+        LEFT JOIN (
+        SELECT COUNT(s.articleId) AS sum, s.articleId AS id
+        FROM support s
+        GROUP BY s.articleId
+        ) cc
+        ON ss.articleId = cc.id
+        ) vv
+        LEFT JOIN (
+        SELECT COUNT(b.articleId) AS sumBro, b.articleId AS bid
+        FROM browseInfo b
+        GROUP BY b.articleId
+        ) bb
+        ON vv.articleId = bb.bid
+        <where>
+            <if test="categoryId!=null and categoryId!=''">
+              and vv.categoryId=#{categoryId}
+            </if>
+            <if test=" title !=null and title!=''">
+                and vv.title LIKE '%${title}%'
+            </if>
+            <if test="userName!=null and userName!=''">
+                and vv.userName LIKE '%${userName}%'
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getCategory" parameterType="com.qf.pojo.Category" resultType="com.qf.pojo.Category">
+        select * from category where flag =1 and parentId !=0
+    </select>
+    
+    <update id="upArticle" parameterType="com.qf.vo.IdsVo">
+        update articleInfo set flag = 0 where articleId in(
+        <foreach collection="unIds" item="unId" separator=",">
+            #{unId}
+        </foreach>
+        )
+    </update>
+
+    <select id="getArticleById" parameterType="com.qf.vo.IdsVo" resultType="com.qf.pojo.ArticleInfo">
+        select * from articleInfo where articleId=#{id} and flag=1
+    </select>
+
+</mapper>
