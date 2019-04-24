@@ -42,6 +42,9 @@
             <if test="userName!=null and userName!=''">
                 and vv.userName LIKE '%${userName}%'
             </if>
+            <if test="articleInfoDate!=null and articleInfoDate!=''">
+                and #{articleInfoDate}>to_days(now())-to_days(articleInfoDate)
+            </if>
         </where>
     </select>
 

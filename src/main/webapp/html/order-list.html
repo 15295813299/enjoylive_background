@@ -54,11 +54,11 @@
             </select>
           </div>
           <div class="layui-input-inline">
-            <select name="contrller">
-              <option>发表时间</option>
-              <option>七天内</option>
-              <option>一个月内</option>
-              <option>一个月后</option>
+            <select name="contrller" id="time">
+              <option value="">发表时间</option>
+              <option value="7">七天内</option>
+              <option value="30">一个月内</option>
+              <option value="180">半年内</option>
             </select>
           </div>
 
@@ -116,7 +116,8 @@
                 "currentPage":current,
                 "categoryId":$("#column").val(),
                 "userName":$("#name").val(),
-                "title":title
+                "title":title,
+                "articleInfoDate":$("#time").val()
             }),
             success:function (resp) {
                 console.log(resp);
