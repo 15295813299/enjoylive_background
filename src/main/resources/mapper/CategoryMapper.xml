@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mapper.CategoryMapper">
+    <resultMap id="CategoryMap" type="com.qf.dto.CategoryDto">
+        <id column="categoryId" property="categoryId"></id>
+        <result column="categoryName" property="categoryName"></result>
+        <result column="categoryPoto" property="categoryPoto"></result>
+        <result column="categoryLogo" property="categoryLogo"></result>
+        <result column="parentId" property="parentId"></result>
+        <collection property="dto" ofType="com.qf.dto.CategoryDto">
+            <id column="cid" property="categoryId"></id>
+            <result column="cname" property="categoryName"></result>
+            <result column="cpoto" property="categoryPoto"></result>
+            <result column="clogo" property="categoryLogo"></result>
+            <result column="cparentId" property="parentId"></result>
+        </collection>
+    </resultMap>
+    <select id="getCategory" parameterType="com.qf.vo.CategoryVo" resultMap="CategoryMap">
+        SELECT
+            c1.*,
+            c2.categoryId cid,
+            c2.categoryName cname,
+            c2.categoryPoto cpoto,
+            c2.categoryLogo clogo,
+            c2.categoryPoto cpoto,
+            c2.parentId cparentId
+        FROM
+            category c1
+        RIGHT JOIN category c2 ON c1.categoryId = c2.parentId
+        WHERE
+            c2.parentId NOT IN (0)
+    </select>
+
+    <select id="getCategoryBy" parameterType="com.qf.vo.CategoryVo" resultType="com.qf.dto.CategoryDto">
+        select * from category
+        <where>
+            <trim prefixOverrides="and">
+                <if test="categoryId!=null and categoryId!=''">
+                    and categoryId=#{categoryId}
+                </if>
+                <if test="categoryName!=null and categoryName!=''">
+                    and categoryName like '%${categoryName}%'
+                </if>
+                <if test="flag!=-1 and flagf==-1">
+                    and flag=#{flag}
+                </if>
+                <if test="flag!=-1 and flagf!=-1">
+                    and flag in (#{flag},#{flagf})
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <update id="updateCategoryFlag" parameterType="com.qf.vo.CategoryVo">
+        update category set flag=#{flag} where categoryId in
+        <foreach collection="ids" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

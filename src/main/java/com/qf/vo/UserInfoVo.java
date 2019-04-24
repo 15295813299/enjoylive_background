@@ -1,9 +1,10 @@
 package com.qf.vo;
 
 
+import java.util.Arrays;
 import java.util.List;
 
-public class UserInfoVo {
+public class UserInfoVo extends SearchVo {
 
   private long userInfoId;
   private String username;
@@ -243,13 +244,20 @@ public class UserInfoVo {
             ", country='" + country + '\'' +
             ", province='" + province + '\'' +
             ", city='" + city + '\'' +
-            ", brief=" + brief +
+            ", brief='" + brief + '\'' +
             ", registrationDate='" + registrationDate + '\'' +
             ", birthYear='" + birthYear + '\'' +
             ", birthMonth='" + birthMonth + '\'' +
             ", birthYMD='" + birthYMD + '\'' +
-            ", flag='" + flag + '\'' +
+            ", flag=" + flag +
+            ", flagf=" + flagf +
+            ", pageSize=" + pageSize +
+            ", currentPage=" + currentPage +
+            ", userInfoIds=" + Arrays.toString(userInfoIds) +
             ", roleInfoVo=" + roleInfoVo +
+            ", startTime='" + startTime + '\'' +
+            ", endTime='" + endTime + '\'' +
+            ", username='" + username + '\'' +
             '}';
   }
 }

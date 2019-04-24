@@ -14,14 +14,22 @@
                 <if test="userInfoId!=null and userInfoId!=0">
                     and userInfoId=#{userInfoId}
                 </if>
-                <if test="username!=null and username!=''">
-                    and username=#{username}
-                </if>
+
                 <if test="flag!=null and flag!=-1 and flagf==-1">
                     and flag=#{flag}
                 </if>
                 <if test="flag!=null and flag!=-1 and flagf!=null and flagf!=-1">
-                    and flag=#{flag} or flag=#{flagf}
+                    and (flag=#{flag} or flag=#{flagf})
+                </if>
+                <if test="startTime!=null and startTime!='' and endTime==null">
+                    and registrationDate BETWEEN #{startTime} AND '9999-12-12'
+                </if>
+                <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+
+                    and registrationDate BETWEEN #{startTime} AND #{endTime}
+                </if>
+                <if test="username!=null and username!=''">
+                    and username like '%${username}%'
                 </if>
             </trim>
 

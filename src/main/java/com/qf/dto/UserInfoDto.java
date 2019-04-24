@@ -28,6 +28,24 @@ public class UserInfoDto {
   private Integer currentPage=1;
   private List<RoleInfoDto> roleInfoDto;
   private String roles;
+  private String reportName;
+  private String reportTime;
+
+  public String getReportTime() {
+    return reportTime;
+  }
+
+  public void setReportTime(String reportTime) {
+    this.reportTime = reportTime;
+  }
+
+  public String getReportName() {
+    return reportName;
+  }
+
+  public void setReportName(String reportName) {
+    this.reportName = reportName;
+  }
 
   public String getRoles() {
     return roles;

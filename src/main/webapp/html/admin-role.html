@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
-  
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>欢迎页面-L-admin1.0</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="../css/font.css">
     <link rel="stylesheet" href="../css/xadmin.css">
     <script src="../js/jquery.min.js"></script>
@@ -15,334 +16,369 @@
     <script type="text/javascript" src="../js/xadmin.js"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
-      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="../js/tool.js"></script>
     <style>
-      .layui-table-page{text-align: center;}
+        .layui-table-page {
+            text-align: center;
+        }
     </style>
-  </head>
-  
-  <body>
-    <div class="x-nav">
+</head>
+
+<body>
+<div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
         <a href="">演示</a>
         <a>
           <cite>导航元素</cite></a>
       </span>
-      <a class="layui-btn layui-btn-primary layui-btn-small" style="margin-top:3px;float:right"
-         href="javascript:location.replace(location.href);" title="刷新">
+    <a class="layui-btn layui-btn-primary layui-btn-small" style="margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon layui-icon-refresh-3" style=""></i></a>
-    </div>
-    <div class="x-body">
-      <div class="layui-row">
+</div>
+<div class="x-body">
+    <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so">
-          <input class="layui-input" placeholder="开始日" name="start" id="start">
-          <input class="layui-input" placeholder="截止日" name="end" id="end">
-          <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
-          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+            <input type="text" name="username" placeholder="请输入角色" autocomplete="off" class="layui-input"
+                   id="sreachUsername">
+            <div class="layui-btn" lay-filter="sreach" id="search" data-type="reload"><i class="layui-icon">&#xe615;</i>
+            </div>
         </form>
-      </div>
-      <table class="layui-table" id="ttable" lay-filter="test">
+    </div>
+    <table class="layui-table" id="ttable" lay-filter="test">
 
         </tbody>
-      </table>
-      <div class="page">
+    </table>
+    <div class="page">
         <div id="page">
         </div>
-      </div>
-
     </div>
-    <script type="text/html" id="barDemo">
-      <a title="编辑"><i class="layui-icon" lay-event="edit" >&#xe642;</i></a>
-      <a title="删除"><i class="layui-icon" lay-event="del">&#xe640;</i></a>
-    </script>
 
-   <script type="text/html" id="btn">
-       <!-- 这里的 checked 的状态只是演示 -->
-       <input type="checkbox" name="status" value="{{d.roleId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo" {{ d.status == '启用' ? 'checked' : '' }}>
-   </script>
-    <script>
-      layui.use('laydate', function(){
+</div>
+<script type="text/html" id="barDemo">
+    <a title="编辑"><i class="layui-icon" lay-event="edit">&#xe642;</i></a>
+    <a title="删除"><i class="layui-icon" lay-event="del">&#xe640;</i></a>
+</script>
+
+<script type="text/html" id="btn">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="status" value="{{d.roleId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo"
+           {{ d.status== '启用' ? 'checked' : '' }}>
+</script>
+<script>
+    layui.use('laydate', function () {
         var laydate = layui.laydate;
-        
+
         //执行一个laydate实例
         laydate.render({
-          elem: '#start' //指定元素
+            elem: '#start' //指定元素
         });
 
         //执行一个laydate实例
         laydate.render({
-          elem: '#end' //指定元素
+            elem: '#end' //指定元素
         });
-      });
+    });
 
-       /*用户-停用*/
-      function member_stop(obj,id,flag){
-              var array = new Array();
-              array.push(id)
-              console.log($(obj).attr('title'))
-              if(!flag){
-                      $.ajax({
-                          type: "POST",
-                          url:getRootPath()+"/updateRoleInfoFlagById",
-                          contentType: "application/json;charset=UTF-8",
-                          dataType: "json",
-                          data:JSON.stringify({
-                              roleIds:array,
-                              flag:'2'
-                          }),
-                          success:function (data) {
-                              if (data==true){
-                                  //发异步把用户状态进行更改
-                                  $(obj).attr('title','停用')
-                                  $(obj).find('i').html('&#xe62f;');
-
-                                  $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                                  layer.msg('已停用!',{icon: 5,time:1000});
-                              } else {
-                                  layer.msg('数据错误!',{icon:2,time:1000});
-                              }
-
-                          },
-                          error:function (data) {
-                              alert("内部服务器错误！")
-                          }
-
-                  });
-
-
-              }else{
-                  $.ajax({
-                      type: "POST",
-                      url:getRootPath()+"/updateRoleInfoFlagById",
-                      contentType: "application/json;charset=UTF-8",
-                      dataType: "json",
-                      data:JSON.stringify({
-                          roleIds:array,
-                          flag:'1'
-                      }),
-                      success:function (data) {
-                          if (data==true){
-                              $(obj).attr('title','启用')
-                              $(obj).find('i').html('&#xe601;');
-
-                              $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                              layer.msg('已启用!',{icon: 6,time:1000});
-                          } else {
-                              layer.msg('数据错误!',{icon:2,time:1000});
-                          }
-
-                      },
-                      error:function (data) {
-                          alert("内部服务器错误！")
-                      }
-                  })
-
-
-              }
-      }
-
-      /*用户-删除*/
-      function member_del(obj,id){
-          layer.confirm('确认要删除吗？',function(index){
-              var array = new Array();
-              array.push(id)
-              $.ajax({
-                  type: "POST",
-                  url:getRootPath()+"/updateRoleInfoFlagById",
-                  contentType: "application/json;charset=UTF-8",
-                  dataType: "json",
-                  data:JSON.stringify({
-                      roleIds:array,
-                      flag:'0'
-                  }),
-                  success:function (data) {
-                      if (data==true){
-                          //发异步删除数据
-                          $(obj).parents("tr").remove();
-                          layer.msg('已删除!',{icon:1,time:1000});
-                          location.reload();
-                      } else {
-                          layer.msg('数据错误!',{icon:1,time:1000});
-                      }
-
-                  },
-                  error:function (data) {
-                      alert("内部服务器错误！")
-                  }
-              })
-
-          });
-      }
-
-
-
-      function delAll (argument,ids) {
-
-  
-        layer.confirm('确认要删除吗？'+ids,function(index){
+    /*用户-停用*/
+    function member_stop(obj, id, flag) {
+        var array = new Array();
+        array.push(id)
+        console.log($(obj).attr('title'))
+        if (!flag) {
             $.ajax({
                 type: "POST",
-                url:getRootPath()+"/updateRoleInfoFlagById",
+                url: getRootPath() + "/updateRoleInfoFlagById",
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
-                data:JSON.stringify({
-                    roleIds:ids,
-                    flag:'0'
+                data: JSON.stringify({
+                    roleIds: array,
+                    flag: '2'
                 }),
-                success:function (data) {
-                    if (data==true){
-                        //捉到所有被选中的，发异步进行删除
-                        layer.msg('删除成功', {icon: 1});
-                        $(".layui-form-checked").not('.header').parents('tr').remove();
+                success: function (data) {
+                    if (data == true) {
+                        //发异步把用户状态进行更改
+                        $(obj).attr('title', '停用')
+                        $(obj).find('i').html('&#xe62f;');
+
+                        $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                        layer.msg('已停用!', {icon: 5, time: 1000});
                     } else {
-                        layer.msg('数据错误!',{icon:1,time:1000});
+                        layer.msg('数据错误!', {icon: 2, time: 1000});
                     }
 
                 },
-                error:function (data) {
+                error: function (data) {
+                    alert("内部服务器错误！")
+                }
+
+            });
+
+
+        } else {
+            $.ajax({
+                type: "POST",
+                url: getRootPath() + "/updateRoleInfoFlagById",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    roleIds: array,
+                    flag: '1'
+                }),
+                success: function (data) {
+                    if (data == true) {
+                        $(obj).attr('title', '启用')
+                        $(obj).find('i').html('&#xe601;');
+
+                        $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                        layer.msg('已启用!', {icon: 6, time: 1000});
+                    } else {
+                        layer.msg('数据错误!', {icon: 2, time: 1000});
+                    }
+
+                },
+                error: function (data) {
+                    alert("内部服务器错误！")
+                }
+            })
+
+
+        }
+    }
+
+    /*用户-删除*/
+    function member_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            var array = new Array();
+            array.push(id)
+            $.ajax({
+                type: "POST",
+                url: getRootPath() + "/updateRoleInfoFlagById",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    roleIds: array,
+                    flag: '0'
+                }),
+                success: function (data) {
+                    if (data == true) {
+                        //发异步删除数据
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!', {icon: 1, time: 1000});
+                        location.reload();
+                    } else {
+                        layer.msg('数据错误!', {icon: 1, time: 1000});
+                    }
+
+                },
+                error: function (data) {
                     alert("内部服务器错误！")
                 }
             })
 
         });
-      }
+    }
 
-      $.ajax({
-          type: "POST",
-          url:getRootPath()+"/getRoleInfoAll",
-          contentType: "application/json;charset=UTF-8",
-          dataType: "json",
-          data:JSON.stringify({
-              flag:'1',
-              flagf:'2',
-          }),
-          success: function (data) {
-              console.log(data)
-              $("#sumT").html(data.total)
-              $(data.list).each(function (index,item) {
-                  // console.log(data)
-                  layui.use('table', function () {
-                      var table = layui.table;
-                      var form = layui.form;
-                      console.log(data)
-                      //展示已知数据
-                      table.render({
-                          elem: '#ttable'
-                          , cellMinWidth: 10
-                          , toolbar: '<xblock>\n' +
-                              '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
-                              '        <button class="layui-btn" onclick="x_admin_show(\'添加用户\',\'role-add.html\')"><i class="layui-icon"></i>添加</button>\n' +
-                              '      </xblock>'
 
-                          , cols: [[ //标题栏
-                              {type: 'checkbox'}
-                              , {field: 'roleId', title: 'ID', sort: true}
-                              , {field: 'roleName', title: '角色名'}
-                              , {field: 'rule', title: '拥有权限规则'}
-                              , {field: 'roleDescribe', title: '描述'}
-                              , {field: 'status', title: '状态' ,templet:"#btn"
-                              }
-                              , {fixed: '', title: '操作', toolbar: '#barDemo', title: "", width: 250}
+    function delAll(argument, ids) {
 
-                              // barDemo
-                          ]]
-                          , data: data.list
-                          // ,skin: 'line' //表格风格
-                          , even: true
-                          , page: true //是否显示分页
-                          // ,limits: [5, 7, 10]
-                          , limit: 5 //每页默认显示的数量
-                      });
-                      table.on('toolbar(test)', function (obj) {
-                          var checkStatus = table.checkStatus(obj.config.id);
-                          switch (obj.event) {
-                              case 'getCheckData':
-                                  var data = checkStatus.data;
-                                  // alert(data)
-                                  var array = new Array();
-                                  $(data).each(function (index, item) {
-                                      console.log(item.roleId)
-                                      array.push(item.roleId)
-                                  })
-                                  delAll(this, array)
-                                  break;
-                              case 'getCheckLength':
-                                  var data = checkStatus.data;
-                                  layer.msg('选中了：' + data.length + ' 个');
-                                  break;
-                              case 'isAll':
-                                  layer.msg(checkStatus.isAll ? '全选' : '未全选');
-                                  break;
-                          }
-                          ;
-                      });
-                      //监听行工具事件
-                      table.on('tool(test)', function (obj) {
-                          var data = obj.data;
-                          console.log(data.roleId)
-                          if (obj.event === 'del') {
-                              layer.confirm('真的删除该管理类型吗', function (index) {
-                                  // obj.del();
-                                  // layer.close(index);
-                                  member_del(obj, data.roleId)
-                              });
-                          } else if (obj.event === 'edit') {
-                              layer.prompt({
-                                  formType: 2
-                                  , value: data.roleId
-                              }, function (value, index) {
-                                  obj.update({
-                                      userInfoId: value
-                                  });
-                                  layer.close(index);
-                                  x_admin_show('编辑', "role-add.html?id=" + value, 600, 400)
-                              });
-                          }else if (obj.event === 'stop') {
-                              layer.prompt({
-                                  formType: 2
-                                  , value: data.roleId
-                              }, function (value, index) {
-                                  // obj.update({
-                                  //     userInfoId: value
-                                  // });
-                                  // layer.close(index);
-                                  member_stop(obj,value)
-                              });
-                          }else if (obj.event === 'on') {
-                              alert("aaa")
-                              layer.prompt({
-                                  formType: 2
-                                  , value: data.roleId
-                              }, function (value, index) {
-                                  // obj.update({
-                                  //     userInfoId: value
-                                  // });
-                                  // layer.close(index);
-                                  // member_stop(obj,value)
-                              });
-                          }
-                      });
 
-                      //监听性别操作
-                      form.on('switch(statusDemo)', function(obj){
-                          if (obj.elem.checked){
-                              member_stop(null,this.value,obj.elem.checked)
-                          } else {
-                              member_stop(null,this.value,obj.elem.checked)
-                          }
-                      });
+        layer.confirm('确认要删除吗？' + ids, function (index) {
+            $.ajax({
+                type: "POST",
+                url: getRootPath() + "/updateRoleInfoFlagById",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    roleIds: ids,
+                    flag: '0'
+                }),
+                success: function (data) {
+                    if (data == true) {
+                        //捉到所有被选中的，发异步进行删除
+                        layer.msg('删除成功', {icon: 1});
+                        $(".layui-form-checked").not('.header').parents('tr').remove();
+                    } else {
+                        layer.msg('数据错误!', {icon: 1, time: 1000});
+                    }
 
-                      // layer.init()
-                      $("#sumT").html(data.total)
-                  });
-              });
-          }
-      })
-    </script>
-  </body>
+                },
+                error: function (data) {
+                    alert("内部服务器错误！")
+                }
+            })
+
+        });
+    }
+
+    $.ajax({
+        type: "POST",
+        url: getRootPath() + "/getRoleInfoAll",
+        contentType: "application/json;charset=UTF-8",
+        dataType: "json",
+        data: JSON.stringify({
+            flag: '1',
+            flagf: '2',
+        }),
+        success: function (data) {
+            console.log(data)
+            $("#sumT").html(data.total)
+            layui.use('table', function () {
+                var table = layui.table;
+                var form = layui.form;
+                console.log(data)
+                //展示已知数据
+                table.render({
+                    elem: '#ttable'
+                    , cellMinWidth: 10
+                    , toolbar: '<xblock>\n' +
+                        '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
+                        '        <button class="layui-btn" onclick="x_admin_show(\'添加用户\',\'role-add.html\')"><i class="layui-icon"></i>添加</button>\n' +
+                        '      </xblock>'
+
+                    , cols: [[ //标题栏
+                        {type: 'checkbox'}
+                        , {field: 'roleId', title: 'ID', sort: true}
+                        , {field: 'roleName', title: '角色名'}
+                        , {field: 'rule', title: '拥有权限规则'}
+                        , {field: 'roleDescribe', title: '描述'}
+                        , {
+                            field: 'status', title: '状态', templet: "#btn"
+                        }
+                        , {fixed: '', title: '操作', toolbar: '#barDemo', title: "", width: 250}
+
+                        // barDemo
+                    ]]
+                    , data: data.list
+                    // ,skin: 'line' //表格风格
+                    , even: true
+                    , id: "searchReload"
+                    , page: true //是否显示分页
+                    // ,limits: [5, 7, 10]
+                    , limit: 5 //每页默认显示的数量
+                });
+                table.on('toolbar(test)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case 'getCheckData':
+                            var data = checkStatus.data;
+                            // alert(data)
+                            var array = new Array();
+                            $(data).each(function (index, item) {
+                                console.log(item.roleId)
+                                array.push(item.roleId)
+                            })
+                            delAll(this, array)
+                            break;
+                        case 'getCheckLength':
+                            var data = checkStatus.data;
+                            layer.msg('选中了：' + data.length + ' 个');
+                            break;
+                        case 'isAll':
+                            layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                            break;
+                    }
+                    ;
+                });
+                //监听行工具事件
+                table.on('tool(test)', function (obj) {
+                    var data = obj.data;
+                    console.log(data.roleId)
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除该管理类型吗', function (index) {
+                            // obj.del();
+                            // layer.close(index);
+                            member_del(obj, data.roleId)
+                        });
+                    } else if (obj.event === 'edit') {
+                        layer.prompt({
+                            formType: 2
+                            , value: data.roleId
+                        }, function (value, index) {
+                            obj.update({
+                                userInfoId: value
+                            });
+                            layer.close(index);
+                            x_admin_show('编辑', "role-add.html?id=" + value, 600, 400)
+                        });
+                    } else if (obj.event === 'stop') {
+                        layer.prompt({
+                            formType: 2
+                            , value: data.roleId
+                        }, function (value, index) {
+                            // obj.update({
+                            //     userInfoId: value
+                            // });
+                            // layer.close(index);
+                            member_stop(obj, value)
+                        });
+                    } else if (obj.event === 'on') {
+                        alert("aaa")
+                        layer.prompt({
+                            formType: 2
+                            , value: data.roleId
+                        }, function (value, index) {
+                            // obj.update({
+                            //     userInfoId: value
+                            // });
+                            // layer.close(index);
+                            // member_stop(obj,value)
+                        });
+                    }
+                });
+
+                //监听性别操作
+                form.on('switch(statusDemo)', function (obj) {
+                    if (obj.elem.checked) {
+                        member_stop(null, this.value, obj.elem.checked)
+                    } else {
+                        member_stop(null, this.value, obj.elem.checked)
+                    }
+                });
+
+                var $ = layui.$, active = {
+                    reload: function () {
+                        var demoReload = $('#search');
+                        $.ajax({
+                            type: "POST",
+                            url: getRootPath() + "/getRoleInfoAll",
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                roleName: $("#sreachUsername").val(),
+                                flag: '1',
+                                flagf: '2',
+                            }),
+                            success: function (data) {
+                                console.log(data)
+                                //执行重载
+                                table.reload('searchReload', {
+                                    data: data.list
+                                    , page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    },
+
+                                });
+                            }
+
+                        })
+
+                    }
+                };
+
+                $('#search').on('click', function () {
+                    ;
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+
+            });
+        }
+    })
+</script>
+</body>
 
 </html>

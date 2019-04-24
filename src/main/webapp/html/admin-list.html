@@ -44,8 +44,8 @@
         <form class="layui-form layui-col-md12 x-so">
           <input class="layui-input" placeholder="开始日" name="start" id="start">
           <input class="layui-input" placeholder="截止日" name="end" id="end">
-          <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
-          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+          <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input" id="sreachUsername">
+          <div class="layui-btn"  lay-filter="sreach" id="search" data-type="reload"><i class="layui-icon">&#xe615;</i></div>
         </form>
       </div>
       <table class="layui-table" id="ttable" lay-filter="test">
@@ -63,19 +63,19 @@
       <input type="checkbox" name="status" value="{{d.userInfoId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo" {{ d.status == '启用' ? 'checked' : '' }}>
     </script>
     <script>
-      layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#start' //指定元素
-        });
-
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#end' //指定元素
-        });
-      });
+      // layui.use('laydate', function(){
+      //   var laydate = layui.laydate;
+      //
+      //   //执行一个laydate实例
+      //   laydate.render({
+      //     elem: '#start' //指定元素
+      //   });
+      //
+      //   //执行一个laydate实例
+      //   laydate.render({
+      //     elem: '#end' //指定元素
+      //   });
+      // });
 
        /*用户-停用*/
       function member_stop(obj,id,flag){
@@ -198,10 +198,6 @@
               flagf: '2',
           }),
           success: function (data) {
-              console.log(data)
-              $("#sumT").html(data.total)
-              $(data.list).each(function (index, item) {
-
                   layui.use('table', function () {
                       var table = layui.table;
                       var form = layui.form;
@@ -229,6 +225,7 @@
                               // barDemo
                           ]]
                           , data: data.list
+                          ,id:'searchReload'
                           // ,skin: 'line' //表格风格
                           , even: true
                           , page: true //是否显示分页
@@ -302,11 +299,44 @@
                           }
                       });
 
-                      // layer.init()
-                      $("#sumT").html(data.total)
-                  })
 
-              })
+                      var $ = layui.$, active = {
+                          reload: function(){
+                              var demoReload = $('#search');
+                              $.ajax({
+                                  type: "POST",
+                                  url: getRootPath() + "/getUserRoleInfoAll",
+                                  contentType: "application/json;charset=UTF-8",
+                                  dataType: "json",
+                                  data: JSON.stringify({
+                                      startTime: $("#start").val(),
+                                      endTime: $("#end").val(),
+                                      username:$("#sreachUsername").val(),
+                                      flag: '1',
+                                      flagf: '2',
+                                  }),
+                                  success:function (data) {
+                                      //执行重载
+                                      table.reload('searchReload', {
+                                          data:data.list
+                                          ,page: {
+                                              curr: 1 //重新从第 1 页开始
+                                          },
+
+                                      });
+                                  }
+
+                              })
+
+                          }
+                      };
+
+                      $('#search').on('click', function(){
+                          debugger;
+                          var type = $(this).data('type');
+                          active[type] ? active[type].call(this) : '';
+                      });
+                  })
           }
       })
     </script>

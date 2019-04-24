@@ -33,16 +33,28 @@
          <if test="flagf!=-1 and flag!=-1 ">
               and ur.flag in(#{flagf},#{flag})
          </if>
+        <if test="startTime!=null and startTime!='' and endTime==null">
+            and u.registrationDate BETWEEN #{startTime} AND '9999-12-12'
+        </if>
+        <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+
+            and u.registrationDate BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="username!=null and username!='' ">
+            and u.username like '%${username}%'
+        </if>
+
+
     </select>
 
     <select id="getRoleInfoAll" parameterType="com.qf.vo.RoleInfoVo" resultType="com.qf.dto.RoleInfoDto">
            SELECT * from roleInfo
         <where>
-            <if test="flag!=null and flag!='' and  flagf==-1 ">
-                flag=#{flag}
+            <if test="flag!=-1 or flagf!=-1 ">
+                flag in(#{flag},#{flagf})
             </if>
-            <if test="flagf!=null and flagf!=-1 and flag!=null and flag!=-1 ">
-                flag=#{flagf} or flag=#{flag}
+            <if test="roleName!=null and roleName!='' ">
+                 and roleName like '%${roleName}%'
             </if>
         </where>
 

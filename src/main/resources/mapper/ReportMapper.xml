@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mapper.ReportMapper">
+    <select id="getReportPersonalData" parameterType="com.qf.vo.UserInfoVo" resultType="com.qf.dto.UserInfoDto">
+        SELECT
+			tb1.userInfoId,
+			tb1.username,
+			tb1.sex,
+			tb1.`name`,
+			tb1.email,
+			tb1.phone,
+			tb1.headPath,
+			tb1.reportTime,
+			tb1.flag,
+			u2.name reportName
+		FROM
+			(
+				SELECT
+					u.*,
+					rpd.userInfoId rpduid,
+					rpd.reportTime
+				FROM
+					userInfo u,
+					reportPersonalData rpd
+				WHERE
+					rpd.reportUserInfoId = u.userInfoId
+				AND u.flag = #{flag} AND rpd.flag=#{flagf}
+			) tb1,
+			userInfo u2
+		WHERE tb1.rpduid=u2.userInfoId AND u2.flag=1
+		<if test="startTime!=null and startTime!='' and endTime==''">
+			and reportTime BETWEEN #{startTime} AND '9999-12-12'
+		</if>
+		<if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+
+			and reportTime BETWEEN #{startTime} AND #{endTime}
+		</if>
+		<if test="username!=null and username!=''">
+			and tb1.username like '%${username}%'
+		</if>
+   </select>
+
+	<update id="updateReportPersonalData" parameterType="com.qf.vo.UserInfoVo">
+		update reportPersonalData set flag=#{flag} where reportUserInfoId in
+		<foreach collection="userInfoIds" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
+</mapper>
