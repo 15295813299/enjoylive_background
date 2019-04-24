@@ -58,6 +58,7 @@
 
 </div>
 <script type="text/html" id="barDemo">
+    <a title="查看"><i class="layui-icon" lay-event="show" >&#xe60b;</i></a>
     <a title="编辑"><i class="layui-icon" lay-event="edit" >&#xe642;</i></a>
     <a title="删除"><i class="layui-icon" lay-event="del">&#xe640;</i></a>
 </script>
@@ -65,6 +66,7 @@
 <script type="text/html" id="btn">
     <!-- 这里的 checked 的状态只是演示 -->
     <input type="checkbox" name="status" value="{{d.categoryId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo" {{ d.flag == '1' ? 'checked' : '' }}>
+
 </script>
 <script type="text/html" id="img">
     <!-- 这里的 checked 的状态只是演示 -->
@@ -291,41 +293,15 @@
                         var data = obj.data;
                         console.log(data.categoryId)
                         if (obj.event === 'del') {
-                            layer.confirm('真的删除该管理类型吗', function (index) {
-                                // obj.del();
-                                // layer.close(index);
                                 member_del(obj, data.categoryId)
-                            });
-                        } else if (obj.event === 'edit') {
-                            layer.prompt({
-                                formType: 2
-                                , value: data.categoryId
-                            }, function (value, index) {
-                                obj.update({
-                                    categoryId: value
-                                });
-                                layer.close(index);
-                                x_admin_show('编辑', "category-edit.html?id=" + value, 600, 400)
-                            });
+                        } else if (obj.event === 'show') {
+                                x_admin_show('查看', "category-details.html?id=" + data.categoryId, 600, 400)
                         }else if (obj.event === 'stop') {
-                            layer.prompt({
-                                formType: 2
-                                , value: data.categoryId
-                            }, function (value, index) {
-                                member_stop(obj,value)
-                            });
-                        }else if (obj.event === 'on') {
-                            alert("aaa")
-                            layer.prompt({
-                                formType: 2
-                                , value: data.categoryId
-                            }, function (value, index) {
-                                // obj.update({
-                                //     categoryId: value
-                                // });
-                                // layer.close(index);
-                                // member_stop(obj,value)
-                            });
+                                member_stop(obj,data.categoryId)
+                        }else if (obj.event === 'edit') {
+
+
+
                         }
                     });
 
