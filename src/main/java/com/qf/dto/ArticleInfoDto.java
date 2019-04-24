@@ -36,6 +36,60 @@ public class ArticleInfoDto {
     //每页显示行数
     private int pageSize=8;
 
+    private long userInfoId;
+    private long uId;
+    private String uname;
+    private String violateId;
+    private String violateContent;
+    private String username;
+
+    public long getUserInfoId() {
+        return userInfoId;
+    }
+
+    public void setUserInfoId(long userInfoId) {
+        this.userInfoId = userInfoId;
+    }
+
+    public long getuId() {
+        return uId;
+    }
+
+    public void setuId(long uId) {
+        this.uId = uId;
+    }
+
+    public String getUname() {
+        return uname;
+    }
+
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    public String getViolateId() {
+        return violateId;
+    }
+
+    public void setViolateId(String violateId) {
+        this.violateId = violateId;
+    }
+
+    public String getViolateContent() {
+        return violateContent;
+    }
+
+    public void setViolateContent(String violateContent) {
+        this.violateContent = violateContent;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public long getArticleId() {
         return articleId;

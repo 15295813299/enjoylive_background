@@ -1,6 +1,8 @@
 package com.qf.mapper;
 
+import com.qf.dto.ArticleInfoDto;
 import com.qf.dto.UserInfoDto;
+import com.qf.vo.ArticleInfoVo;
 import com.qf.vo.UserInfoVo;
 
 import java.util.List;
@@ -19,4 +21,11 @@ public interface ReportMapper {
      * @return
      */
     int updateReportPersonalData(UserInfoVo vo);
+
+    /**
+     * 获取举报文章
+     * @param vo
+     * @return
+     */
+    List<ArticleInfoDto> getReportArticleBy(ArticleInfoVo vo);
 }

@@ -48,7 +48,35 @@
 			#{item}
 		</foreach>
 	</update>
-	<select id="" parameterType="com.qf.vo.ArticleInfoVo" resultType="com.qf.dto.ArticleInfoDto">
+	<select id="getReportArticleBy" parameterType="com.qf.vo.ArticleInfoVo" resultType="com.qf.dto.ArticleInfoDto">
+		  SELECT
+			v.violateId,
+			v.violateContent,
+			u1.username,
+			u2.userInfoId uId,
+			u2.userName uname,
+			a.*
+		FROM
+			violate v,
+			userInfo u1,
+			articleInfo a,
+			userInfo u2
+		WHERE
+			v.flag IN (1, 2)
+		AND u1.userInfoId = v.reportToUserId
+		AND u1.flag = 1
+		AND a.articleId=v.articleId
+		AND v.flag=1
+		AND v.userInfoId=u2.userInfoId
+		<if test="startTime!=null and startTime!='' and endTime==''">
+			and reportTime BETWEEN #{startTime} AND '9999-12-12'
+		</if>
+		<if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
 
+			and reportTime BETWEEN #{startTime} AND #{endTime}
+		</if>
+		<if test="username!=null and username!=''">
+			and a.title like '%${title}%'
+		</if>
 	</select>
 </mapper>
