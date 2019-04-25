@@ -59,4 +59,46 @@
             #{item}
         </foreach>
     </update>
+
+    <!--获取想要的类型-->
+    <select id="getCategoryBys" parameterType="com.qf.vo.CategoryVo" resultType="com.qf.dto.CategoryDto2">
+        select c.*,cc.categoryName as 'parentName' from category c LEFT JOIN category cc on c.parentId=cc.categoryId and cc.flag=1
+        where c.flag=1
+          <if test="parentId!=null and parentId!=''">
+              and c.parentId= #{parentId}
+          </if>
+        <if test="categoryId!=null and categoryId!=''">
+            and c.categoryId= #{categoryId}
+        </if>
+    </select>
+
+    <!--添加类型-->
+    <insert id="addCategory" parameterType="com.qf.vo.CategoryVo">
+        insert into category (categoryName, categoryPoto, categoryLogo, parentId)
+         values (#{categoryName},#{categoryPoto},#{categoryLogo},#{parentId});
+    </insert>
+
+
+    <!--修改类型-->
+    <update id="upCategory" parameterType="com.qf.vo.CategoryVo">
+        update category
+        <set>
+            <if test="categoryName!=null and categoryName!='' ">
+                categoryName = #{categoryName},
+            </if>
+            <if test="categoryPoto!=null and categoryPoto!='' ">
+                categoryPoto = #{categoryPoto},
+            </if>
+            <if test="categoryLogo!=null and categoryLogo!='' ">
+                categoryLogo = #{categoryLogo},
+            </if>
+            <if test="parentId!=null and parentId!='' ">
+                parentId = #{parentId},
+            </if>
+        </set>
+        where categoryId=#{categoryId}
+    </update>
+    
+
+
 </mapper>

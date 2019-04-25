@@ -1,49 +1,13 @@
-package com.qf.vo;
+package com.qf.dto;
 
-import java.io.Serializable;
-
-public class CategoryVo extends SearchVo implements Serializable {
+public class CategoryDto2 {
     private long categoryId;
     private String categoryName;
     private String categoryPoto;
     private String categoryLogo;
     private long parentId;
-    private int flag=-1;
-    private int flagf=-1;
-    private int[] ids;
-    private int son;
-
-    public int getSon() {
-        return son;
-    }
-
-    public void setSon(int son) {
-        this.son = son;
-    }
-
-    public int getFlag() {
-        return flag;
-    }
-
-    public int[] getIds() {
-        return ids;
-    }
-
-    public void setIds(int[] ids) {
-        this.ids = ids;
-    }
-
-    public void setFlag(int flag) {
-        this.flag = flag;
-    }
-
-    public int getFlagf() {
-        return flagf;
-    }
-
-    public void setFlagf(int flagf) {
-        this.flagf = flagf;
-    }
+    private String flag;
+    private String parentName;
 
     public long getCategoryId() {
         return categoryId;
@@ -85,4 +49,32 @@ public class CategoryVo extends SearchVo implements Serializable {
         this.parentId = parentId;
     }
 
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    @Override
+    public String toString() {
+        return "CategoryDto2{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", categoryPoto='" + categoryPoto + '\'' +
+                ", categoryLogo='" + categoryLogo + '\'' +
+                ", parentId=" + parentId +
+                ", flag='" + flag + '\'' +
+                ", parentName='" + parentName + '\'' +
+                '}';
+    }
 }

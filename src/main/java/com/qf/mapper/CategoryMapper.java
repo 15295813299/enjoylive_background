@@ -1,6 +1,7 @@
 package com.qf.mapper;
 
 import com.qf.dto.CategoryDto;
+import com.qf.dto.CategoryDto2;
 import com.qf.vo.CategoryVo;
 
 import java.util.List;
@@ -29,4 +30,15 @@ public interface CategoryMapper {
      * @return
      */
     int updateCategoryFlag(CategoryVo vo);
+
+    /**
+     * 获取模块
+     * @param vo
+     * @return
+     */
+    List<CategoryDto2> getCategoryBys(CategoryVo vo);
+
+    public int addCategory(CategoryVo vo);
+
+    public int upCategory(CategoryVo vo);
 }

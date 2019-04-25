@@ -242,7 +242,7 @@
                         , cellMinWidth: 10
                         , toolbar: '<xblock>\n' +
                             '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
-                            '        <button class="layui-btn" onclick="x_admin_show(\'添加板块\',\'role-add.html\')"><i class="layui-icon"></i>添加</button>\n' +
+                            '        <button class="layui-btn" onclick="x_admin_show(\'添加板块\',\'category-up.html\')"><i class="layui-icon"></i>添加</button>\n' +
                             '      </xblock>'
 
                         , cols: [[ //标题栏
@@ -299,7 +299,7 @@
                         }else if (obj.event === 'stop') {
                                 member_stop(obj,data.categoryId)
                         }else if (obj.event === 'edit') {
-
+                            x_admin_show('修改', "category-up2.html?id=" + data.categoryId, 800, 600)
 
 
                         }
