@@ -100,7 +100,6 @@
             contentType: false,
             processData: false,
             success: function (resp) {
-                console.log(resp);
                 $("#logoImg").attr("src",path+"/"+resp);
             },
             error:function () {
@@ -125,7 +124,6 @@
             contentType: false,
             processData: false,
             success: function (resp) {
-                console.log(resp);
                 $("#potoImg").attr("src",path+"/"+resp);
             },
             error:function () {
@@ -154,7 +152,6 @@
             data:JSON.stringify({
             }),
             success:function (resp) {
-                console.log(resp);
                 $(resp).each(function (index, item) {
                     if (item.parentId==0){
                         $("#types").append($("<option value='"+item.categoryId+"'>"+item.categoryName+"</option>"));

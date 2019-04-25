@@ -10,8 +10,17 @@ public class CategoryDto {
     private String categoryPoto;
     private String categoryLogo;
     private long parentId;
-    private String flag;
+    private String parentName;
+    private int flag;
     private List<CategoryDto> dto;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
     public long getCategoryId() {
         return categoryId;
@@ -53,11 +62,11 @@ public class CategoryDto {
         this.parentId = parentId;
     }
 
-    public String getFlag() {
+    public int getFlag() {
         return flag;
     }
 
-    public void setFlag(String flag) {
+    public void setFlag(int flag) {
         this.flag = flag;
     }
 

@@ -15,7 +15,7 @@ public class UserInfo {
   private String country;
   private String province;
   private String city;
-  private long brief;
+  private String brief;
   private java.sql.Timestamp registrationDate;
   private String birthYear;
   private String birthMonth;
@@ -131,11 +131,11 @@ public class UserInfo {
   }
 
 
-  public long getBrief() {
+  public String getBrief() {
     return brief;
   }
 
-  public void setBrief(long brief) {
+  public void setBrief(String brief) {
     this.brief = brief;
   }
 

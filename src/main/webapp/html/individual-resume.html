@@ -131,8 +131,10 @@
                userInfoId:string
             }),
             success:function (data) {
-                console.log(data)
-                $(".round9").css("background-image","url("+data.list[0].headPath+")")
+
+                if (!$.isEmptyObject(data.list[0].headPath)){
+                    $(".round9").css("background-image","url("+data.list[0].headPath+")")
+                }
                 $("#name").html(data.list[0].name)
                 if (data.list[0].sex=="男"){
                     $("#sex").html("&#xe662;")

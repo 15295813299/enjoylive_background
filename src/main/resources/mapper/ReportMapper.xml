@@ -66,17 +66,26 @@
 		AND u1.userInfoId = v.reportToUserId
 		AND u1.flag = 1
 		AND a.articleId=v.articleId
-		AND v.flag=1
 		AND v.userInfoId=u2.userInfoId
-		<if test="startTime!=null and startTime!='' and endTime==''">
-			and reportTime BETWEEN #{startTime} AND '9999-12-12'
-		</if>
-		<if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+			<if test="flag!=null and flag!=-1">
+				and a.flag=#{flag}
+			</if>
+			<if test="startTime!=null and startTime!='' and endTime==''">
+				and reportTime BETWEEN #{startTime} AND '9999-12-12'
+			</if>
+			<if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
 
-			and reportTime BETWEEN #{startTime} AND #{endTime}
-		</if>
-		<if test="username!=null and username!=''">
-			and a.title like '%${title}%'
-		</if>
+				and reportTime BETWEEN #{startTime} AND #{endTime}
+			</if>
+			<if test="title!=null and title!=''">
+				and a.title like '%${title}%'
+			</if>
+
 	</select>
+	<update id="updateReportArticleData" parameterType="com.qf.vo.ArticleInfoVo">
+		update violate set flag=#{flag} where articleId in
+		<foreach collection="ids" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
 </mapper>

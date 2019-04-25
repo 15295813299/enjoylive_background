@@ -104,7 +104,6 @@
                 userInfoId:id
             }),
             success:function (data) {
-                console.log(data)
                 $("#L_username").val(data.list[0].username)
                 $("#L_email").val(data.list[0].email)
                 $("#L_name").val(data.list[0].name)
@@ -123,7 +122,6 @@
         })
         //监听提交
         form.on('submit(add)', function (data) {
-            console.log(data);
             var array = new Array();
             array.push(id)
             $.ajax({

@@ -220,11 +220,9 @@
 
           }),
           success: function (data) {
-              // console.log(data)
               layui.use('table', function(){
                   var table = layui.table;
                   var form = layui.form;
-                  console.log(data)
                   //展示已知数据
                   table.render({
                       elem: '#ttable'
@@ -281,7 +279,6 @@
                   //监听行工具事件
                   table.on('tool(test)', function(obj){
                       var data = obj.data;
-                      console.log(data.userInfoId)
                       if(obj.event === 'del'){
                           layer.confirm('真的删除该会员么', function(index){
                               // obj.del();

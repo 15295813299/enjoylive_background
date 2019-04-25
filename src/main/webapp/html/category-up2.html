@@ -100,7 +100,6 @@
                 "categoryId":id
             }),
             success:function (resp) {
-                console.log(resp);
                 $(resp).each(function (index, item) {
                     $("#typeName").val(item.categoryName);
                     $("#potoImg").attr("src",item.categoryPoto);
@@ -131,7 +130,6 @@
             contentType: false,
             processData: false,
             success: function (resp) {
-                console.log(resp);
                 $("#logoImg").attr("src",path+"/"+resp);
             },
             error:function () {
@@ -156,7 +154,6 @@
             contentType: false,
             processData: false,
             success: function (resp) {
-                console.log(resp);
                 $("#potoImg").attr("src",path+"/"+resp);
             },
             error:function () {
@@ -185,7 +182,6 @@
             data:JSON.stringify({
             }),
             success:function (resp) {
-                console.log(resp);
                 $(resp).each(function (index, item) {
                     if (item.parentId==0){
                         $("#types").append($("<option value='"+item.categoryId+"'>"+item.categoryName+"</option>"));
@@ -203,19 +199,19 @@
         var typePoto= $("#potoImg").attr("src").split(""+path)[1];
         var typeLogo= $("#logoImg").attr("src").split(""+path)[1];
         $.ajax({
-            url:path+"/addCategory",
+            url:path+"/upCategory",
             type:"POST",
             contentType:"application/json",
             dataType:"json",
             data:JSON.stringify({
                 "categoryName":typeName,
-                "categoryPoto":typeParent,
-                "categoryLogo":typePoto,
+                "categoryPoto":typePoto,
+                "categoryLogo":typeLogo,
                 "parentId":typeParent,
+                categoryId:id
             }),
             success:function (resp) {
                 alert("修改成功");
-                location.href="category-list.html";
             },
             error:function () {
                 alert("失败");

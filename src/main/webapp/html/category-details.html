@@ -158,7 +158,6 @@
             categoryId:id,
         }),
         success:function (data) {
-            console.log(data)
             $("#iimg").attr('src',data[0].categoryPoto);
             $("#name").html(data[0].categoryName)
         }

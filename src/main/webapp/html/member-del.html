@@ -140,12 +140,10 @@
         }),
         success: function (data) {
             $("#sumT").html(data.total)
-            console.log(data)
             $(data.list).each(function (index, item) {
                 layui.use('table', function () {
                     var table = layui.table;
                     var form = layui.form;
-                    console.log(data)
                     //展示已知数据
                     table.render({
                         elem: '#dataTable'
@@ -196,7 +194,6 @@
                                 // alert(data)
                                 var array = new Array();
                                 $(data).each(function (index, item) {
-                                    console.log(item.userInfoId)
                                     array.push(item.userInfoId)
                                 })
                                 delAll(this, array)

@@ -27,11 +27,6 @@
 
     </style>
   </head>
-  <div style="float: left" href="javascript:x_admin_show('编辑','admin-edit.html', 600, 400)">
-    <button class="layui-btn layui-anim-scaleSpring" onclick="x_admin_show('编辑','admin-edit.html', 600, 400)">
-      <i class="layui-icon">&#xe608;</i> 添加
-    </button>
-  </div>
   <body>
   <script src="https://www.amcharts.com/lib/4/core.js"></script>
   <script src="https://www.amcharts.com/lib/4/charts.js"></script>
@@ -48,8 +43,11 @@
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
         async:false,
+        data:JSON.stringify({
+            flag:1,
+            flagf:2
+        }),
         success:function (data) {
-          console.log(data)
           a=data;
         }
     })
@@ -76,7 +74,6 @@
 
           networkSeries.nodes.template.tooltipText = "{name}";
           networkSeries.nodes.template.fillOpacity = 5;
-          networkSeries
 
           networkSeries.nodes.template.label.text = "{name}"
           networkSeries.fontSize = 8;

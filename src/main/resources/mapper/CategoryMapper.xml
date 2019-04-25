@@ -15,6 +15,8 @@
             <result column="cpoto" property="categoryPoto"></result>
             <result column="clogo" property="categoryLogo"></result>
             <result column="cparentId" property="parentId"></result>
+            <result column="categoryName" property="parentName"></result>
+            <result column="cflag" property="flag"></result>
         </collection>
     </resultMap>
     <select id="getCategory" parameterType="com.qf.vo.CategoryVo" resultMap="CategoryMap">
@@ -25,12 +27,19 @@
             c2.categoryPoto cpoto,
             c2.categoryLogo clogo,
             c2.categoryPoto cpoto,
-            c2.parentId cparentId
+            c2.parentId cparentId,
+            c2.flag cflag
         FROM
             category c1
         RIGHT JOIN category c2 ON c1.categoryId = c2.parentId
         WHERE
-            c2.parentId NOT IN (0)
+            c2.parentId NOT IN (0) and c2.flag in
+            <if test="flag!=-1 and flagf==-1">
+                (#{flag})
+            </if>
+            <if test="flag!=-1 and flagf!=-1">
+                (#{flag},#{flagf})
+            </if>
     </select>
 
     <select id="getCategoryBy" parameterType="com.qf.vo.CategoryVo" resultType="com.qf.dto.CategoryDto">

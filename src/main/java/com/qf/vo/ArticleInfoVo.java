@@ -6,15 +6,34 @@ public class ArticleInfoVo extends SearchVo {
   private long articleId;
   private long userInfoId;
   private long uId;
+  private int vFlag=-1;
   private long categoryId;
   private String title;
   private String content;
   private String articleInfoDate;
-  private String flag;
+  private int flag=-1;
   private String uname;
   private String violateId;
   private String violateContent;
   private String username;
+  private int[] ids;
+
+
+  public int getvFlag() {
+    return vFlag;
+  }
+
+  public void setvFlag(int vFlag) {
+    this.vFlag = vFlag;
+  }
+
+  public int[] getIds() {
+    return ids;
+  }
+
+  public void setIds(int[] ids) {
+    this.ids = ids;
+  }
 
   public long getArticleId() {
     return articleId;
@@ -110,11 +129,11 @@ public class ArticleInfoVo extends SearchVo {
     this.username = username;
   }
 
-  public String getFlag() {
+  public int getFlag() {
     return flag;
   }
 
-  public void setFlag(String flag) {
+  public void setFlag(int flag) {
     this.flag = flag;
   }
 

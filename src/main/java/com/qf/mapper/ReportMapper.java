@@ -28,4 +28,11 @@ public interface ReportMapper {
      * @return
      */
     List<ArticleInfoDto> getReportArticleBy(ArticleInfoVo vo);
+
+    /**
+     * 更新文章状态
+     * @param vo
+     * @return
+     */
+    int updateReportArticleData(ArticleInfoVo vo);
 }

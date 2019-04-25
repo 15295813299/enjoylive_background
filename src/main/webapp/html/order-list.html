@@ -120,7 +120,6 @@
                 "articleInfoDate":$("#time").val()
             }),
             success:function (resp) {
-                console.log(resp);
                 $("#count").html("共有数据："+resp.total);
                 $(resp.list).each(function (index, item) {
                   $("#table").append($("<tr>" +
@@ -183,7 +182,6 @@
             type:"POST",
             contentType:'application/json; charset=utf-8',
             success:function (resp) {
-                console.log(resp);
                 $(resp).each(function (index, item) {
                     $("#column").append($(" <option  value='"+item.categoryId+"'>"+item.categoryName+"</option>"))
                 })

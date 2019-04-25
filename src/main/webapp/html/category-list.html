@@ -91,7 +91,7 @@
     function member_stop(obj,id,flag){
         var array = new Array();
         array.push(id)
-        console.log($(obj).attr('title'))
+        console.log(array)
         if(!flag){
             $.ajax({
                 type: "POST",
@@ -221,7 +221,7 @@
 
     $.ajax({
         type: "POST",
-        url:getRootPath()+"/getCategoryByFlag",
+        url:getRootPath()+"/getCategoryBy",
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
         data:JSON.stringify({
@@ -229,42 +229,63 @@
             flagf:'2',
         }),
         success: function (data) {
-            console.log(data)
-            $("#sumT").html(data.total)
-                // console.log(data)
                 layui.use('table', function () {
                     var table = layui.table;
                     var form = layui.form;
-                    console.log(data)
-                    //展示已知数据
-                    table.render({
-                        elem: '#ttable'
-                        , cellMinWidth: 10
-                        , toolbar: '<xblock>\n' +
-                            '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
-                            '        <button class="layui-btn" onclick="x_admin_show(\'添加板块\',\'category-up.html\')"><i class="layui-icon"></i>添加</button>\n' +
-                            '      </xblock>'
-
-                        , cols: [[ //标题栏
-                            {type: 'checkbox'}
-                            , {field: 'categoryId', title: 'ID', sort: true}
-                            , {field: 'categoryName', title: '板块名'}
-                            ,{field: 'categoryLogo', title: '板块Logo' ,width:200,toolbar:'#img'}
-                            , {field: 'parentId', title: '父板块ID'}
-                            , {field: 'flag', title: '状态' ,templet:"#btn"
+                    var $ = layui.$;
+                    var s=new Array()
+                    $(data).each(function (index, item) {
+                        $(item.dto).each(function (index1, item) {
+                            var obj={
+                                categoryId: item.categoryId,
+                                categoryLogo: item.categoryLogo,
+                                categoryName: item.categoryName,
+                                categoryPoto: item.categoryPoto,
+                                dto: item.dto,
+                                flag: item.flag,
+                                parentId: item.parentId,
+                                parentName: item.parentName,
                             }
-                            , {fixed: '', title: '操作', toolbar: '#barDemo', title: "", width: 250}
+                            s.push(obj)
+                        })
 
-                            // barDemo
-                        ]]
-                        , data: data
-                        // ,skin: 'line' //表格风格
-                        , even: true
-                        ,id:"searchReload"
-                        , page: true //是否显示分页
-                        // ,limits: [5, 7, 10]
-                        , limit: 5 //每页默认显示的数量
-                    });
+                    })
+                        table.render({
+                            elem: '#ttable'
+                            , cellMinWidth: 10
+                            , toolbar: '<xblock>\n' +
+                                '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
+                                '        <button class="layui-btn" onclick="x_admin_show(\'添加板块\',\'category-up.html\')"><i class="layui-icon"></i>添加<tton>\n' +
+                                '      </xblock>'
+
+                            , cols: [[ //标题栏
+                                 {field: 'parentName', title: '大板块'}
+                                ,{type: 'checkbox'}
+
+                                , {field: 'categoryId', title: 'ID', sort: true}
+                                , {field: 'categoryName', title: '小板块名'}
+                                ,{field: 'categoryLogo', title: '板块Logo' ,width:200,toolbar:'#img'}
+
+                                , {field: 'flag', title: '状态' ,templet:"#btn"
+                                }
+                                , {fixed: '', title: '操作', toolbar: '#barDemo', title: "", width: 250}
+
+                                // barDemo
+                            ]]
+                            , data: s
+                            ,skin: 'line' //表格风格
+                            // , even: true
+                            ,id:"searchReload"
+                            , page: true //是否显示分页
+                            // ,limits: [5, 7, 10]
+                            , limit: 5 //每页默认显示的数量
+                            ,done:function (res, curr, count) {
+                                alarmTableRowSpan('parentName',1)
+                            }
+                        });
+
+
+                    //展示已知数据
                     table.on('toolbar(test)', function (obj) {
                         var checkStatus = table.checkStatus(obj.config.id);
                         switch (obj.event) {
@@ -273,7 +294,6 @@
                                 // alert(data)
                                 var array = new Array();
                                 $(data).each(function (index, item) {
-                                    console.log(item.categoryId)
                                     array.push(item.categoryId)
                                 })
                                 delAll(this, array)
@@ -291,7 +311,6 @@
                     //监听行工具事件
                     table.on('tool(test)', function (obj) {
                         var data = obj.data;
-                        console.log(data.categoryId)
                         if (obj.event === 'del') {
                                 member_del(obj, data.categoryId)
                         } else if (obj.event === 'show') {
@@ -300,8 +319,6 @@
                                 member_stop(obj,data.categoryId)
                         }else if (obj.event === 'edit') {
                             x_admin_show('修改', "category-up2.html?id=" + data.categoryId, 800, 600)
-
-
                         }
                     });
 
@@ -328,7 +345,6 @@
                                     flagf:'2',
                                 }),
                                 success:function (data) {
-                                    console.log(data)
                                     //执行重载
                                     table.reload('searchReload', {
                                         data:data
@@ -353,6 +369,85 @@
                 });
         }
     })
+
+    function merge(res) {
+
+        var data = res.data;
+        var mergeIndex = 0;//定位需要添加合并属性的行数
+        var mark = 1; //这里涉及到简单的运算，mark是计算每次需要合并的格子数
+        var columsName = ['parentName'];//需要合并的列名称
+        var columsIndex = [1];//需要合并的列索引值
+
+        for (var k = 0; k < columsName.length; k++) { //这里循环所有要合并的列
+            var trArr = $(".layui-table-body>.layui-table").find("tr");//所有行
+            for (var i = 1; i < res.data.length; i++) { //这里循环表格当前的数据
+                var tdCurArr = trArr.eq(i).find("td").eq(columsIndex[k]);//获取当前行的当前列
+                var tdPreArr = trArr.eq(mergeIndex).find("td").eq(columsIndex[k]);//获取相同列的第一列
+
+                if (data[i][columsName[k]] === data[i-1][columsName[k]]) { //后一行的值与前一行的值做比较，相同就需要合并
+                    mark += 1;
+                    tdPreArr.each(function () {//相同列的第一列增加rowspan属性
+                        $(this).attr("rowspan", mark);
+                    });
+                    tdCurArr.each(function () {//当前行隐藏
+                        $(this).css("display", "none");
+                    });
+                }else {
+                    mergeIndex = i;
+                    mark = 1;//一旦前后两行的值不一样了，那么需要合并的格子数mark就需要重新计算
+                }
+            }
+            mergeIndex = 0;
+            mark = 1;
+        }
+    }
+
+    /**
+     * name layui合并tbody中单元格的方法
+     * @param fieldName  要合并列的field属性值
+     * @param index 表格的索引值 从1开始
+     * @desc 此方式适用于没有列冻结的单元格合并
+     */
+    function alarmTableRowSpan(fieldName, index) {
+        var fixedNode = document.getElementsByClassName("layui-table-body")[index - 1];
+        if (!fixedNode) {
+            return false;
+        }
+        var child = fixedNode.getElementsByTagName("td");
+        var childFilterArr = [];
+        // 获取data-field属性为fieldName的td
+        for (var i = 0; i < child.length; i++) {
+            if (child[i].getAttribute("data-field") == fieldName) {
+                childFilterArr.push(child[i]);
+            }
+        }
+        // 获取td的个数和种类
+        var childFilterTextObj = {};
+        for (var i = 0; i < childFilterArr.length; i++) {
+            var childText = childFilterArr[i].textContent;
+            if (childFilterTextObj[childText] == undefined) {
+                childFilterTextObj[childText] = 1;
+            } else {
+                var num = childFilterTextObj[childText];
+                childFilterTextObj[childText] = num * 1 + 1;
+            }
+        }
+        // 给获取到的td设置合并单元格属性
+        for (var key in childFilterTextObj) {
+            var tdNum = childFilterTextObj[key];
+            var canRowSpan = true;
+            for (var i = 0; i < childFilterArr.length; i++) {
+                if (childFilterArr[i].textContent == key) {
+                    if (canRowSpan) {
+                        childFilterArr[i].setAttribute("rowspan", tdNum);
+                        canRowSpan = false;
+                    } else {
+                        childFilterArr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    }
 </script>
 </body>
 

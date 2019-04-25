@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script type="text/javascript" src="../js/jquery-1.8.2.js"></script>
+    <script src="js/echarts.js"></script>
+    <script src="../js/tool.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 750px;height:480px;"></div>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'));
+    $.ajax({
+        type: 'POST',
+        url: getRootPath()+'/statistics/getDatas',
+        success: function (response) {
+            option = {
+                title: {
+                    text: '近七天用户数据分析'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['点赞数','游览数','评论数']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: response.dateName
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name:'点赞数',
+                        type:'line',
+                        stack: '总量',
+                        data:response.supportData
+                    },
+                    {
+                        name:'游览数',
+                        type:'line',
+                        stack: '总量',
+                        data:response.browseData
+                    },
+                    {
+                        name:'评论数',
+                        type:'line',
+                        stack: '总量',
+                        data:response.commentData
+                    }
+                ]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        },
+        error: function (response) {
+            console.log(response)
+        }
+    })
+    // 基于准备好的dom，初始化echarts实例
+
+</script>
+</body>
+</html>

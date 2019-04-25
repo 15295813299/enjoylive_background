@@ -119,7 +119,6 @@
 
           //监听提交
           form.on('submit(add)', function(data){
-            console.log(data);
               var s=[];
               $("input:checkbox[name='like1[write]']:checked").each(function(i){
                   var object = {
@@ -144,8 +143,6 @@
                   async : false,
                   // traditional: true,
                   success: function (data) {
-
-                      console.log(data)
                       if (data==true){
                           layer.alert("修改成功", {icon: 6},function () {
                               // 获得frame索引
@@ -181,8 +178,6 @@
             }),
             async : false,
             success: function (data) {
-
-                console.log(data)
                 $(data).each(function (index, item) {
                     if (item.userInfoId != 0) {
                         $("#username").val(item.username);

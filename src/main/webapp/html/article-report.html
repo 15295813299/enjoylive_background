@@ -60,7 +60,8 @@
 
     </div>
     <script type="text/html" id="barDemo">
-      <a title="查看个人资料"><i class="layui-icon" lay-event="edit" >&#xe612;</i></a>
+      <a title="查看帖子"><i class="layui-icon" lay-event="look" >&#xe6b2;</i></a>
+      <a title="查看被举报人个人资料"><i class="layui-icon" lay-event="lookPersonal" >&#xe66f;</i></a>
       <a title="已读"><i class="layui-icon" lay-event="del">&#xe640;</i></a>
     </script>
     <script type="text/html" id="toolbarDemo">
@@ -72,7 +73,8 @@
     </script>
     <script type="text/html" id="btn">
       <!-- 这里的 checked 的状态只是演示 -->
-      <input type="checkbox" name="status" value="{{d.userInfoId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo" {{ d.status == '启用' ? 'checked' : '' }}>
+      <input type="checkbox" name="status" value="{{d.articleId}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="statusDemo" {{ d.flag == '1' ? 'checked' : '' }}>
+
     </script>
     <script type="text/html" id="img">
       <!-- 这里的 checked 的状态只是演示 -->
@@ -87,12 +89,11 @@
 
                   $.ajax({
                       type: "POST",
-                      url:getRootPath()+"/updateUserInfoById",
+                      url:getRootPath()+"/upArticle",
                       contentType: "application/json;charset=UTF-8",
                       dataType: "json",
                       data:JSON.stringify({
-                          userInfoIds:ids,
-                          flag:"2"
+                          unIds:ids,
                       }),
                       success:function (data) {
                           if (data==true){
@@ -151,11 +152,11 @@
           ids.push(id)
               $.ajax({
                   type: "POST",
-                  url:getRootPath()+"/updateReportPersonalData",
+                  url:getRootPath()+"/updateReportArticleData",
                   contentType: "application/json;charset=UTF-8",
                   dataType: "json",
                   data:JSON.stringify({
-                      userInfoIds:ids,
+                      ids:ids,
                       flag:"0"
                   }),
                   success:function (data) {
@@ -182,15 +183,15 @@
       function delAll (argument,ids) {
 
 
-        layer.confirm('确认要批量删除吗？'+ids,function(index){
+        layer.confirm('确认要批量已读吗？'+ids,function(index){
             $.ajax({
                 type: "POST",
-                url:getRootPath()+"/updateReportPersonalData",
+                url:getRootPath()+"/updateReportArticleData",
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
                 data:JSON.stringify({
-                    userInfoIds:ids,
-                    flag:"0"
+                    ids:ids,
+                    flag:0,
                 }),
                 success:function (data) {
                     if (data==true){
@@ -216,41 +217,36 @@
 
       $.ajax({
           type: "POST",
-          url:getRootPath()+"/getReportPersonalData",
+          url:getRootPath()+"/getReportArticleBy",
           contentType: "application/json;charset=UTF-8",
           dataType: "json",
           data:JSON.stringify({
               flag:1,
-              flagf:1,
+              vFlag:1
 
           }),
           success: function (data) {
-              // console.log(data)
               layui.use('table', function(){
                   var table = layui.table;
                   var form = layui.form;
-                  console.log(data)
                   //展示已知数据
                   table.render({
                       elem: '#ttable'
                       ,cellMinWidth: 30
                       ,toolbar: '<xblock>\n' +
                           '        <button class="layui-btn layui-btn-danger" lay-event="getCheckData"><i class="layui-icon"></i>批量删除</button>\n' +
-                          '        <button class="layui-btn" onclick="x_admin_show(\'添加用户\',\'./member-add.html\',600,400)"><i class="layui-icon"></i>添加</button>\n' +
                           '      </xblock>'
                       ,title: '用户数据表'
                       ,cols: [[ //标题栏
                           {type:'checkbox'}
-                          ,{field: 'userInfoId', title: 'ID', sort: true}
-                          ,{field: 'username', title: '用户名'}
-                          ,{field: 'sex', title: '性别'}
-                          ,{field: 'name', title: '昵称'}
-                          ,{field: 'email', title: '邮箱'}
-                          ,{field: 'phone', title: '手机'}
-                          ,{field: 'headPath', title: '头像' ,width:200,toolbar:'#img'}
-                          , {field: 'reportName', title: '举报类型或名字'}
-                          , {field: 'reportTime', title: '举报时间'}
-                          , {field: 'status', title: '用户状态' ,templet:"#btn"}
+                          ,{field: 'articleId', title: '帖子Id', sort: true}
+                          ,{field: 'title', title: '帖子标题'}
+                          ,{field: 'userInfoId', title: '发帖人id'}
+                          ,{field: 'username', title: '发帖账号'}
+                          ,{field: 'violateContent', title: '举报内容'}
+                          ,{field: 'uname', title: '举报人'}
+                          , {field: 'articleInfoDate', title: '举报时间'}
+                          , {field: 'flag', title: '文章状态' ,templet:"#btn"}
                           ,{fixed: '', title:'操作', toolbar: '#barDemo',title:""}
 
                           // barDemo
@@ -262,7 +258,9 @@
                       ,page: true //是否显示分页
                       // ,limits: [5, 7, 10]
                       ,limit: 5 //每页默认显示的数量
+
                   });
+
                   table.on('toolbar(test)', function(obj){
                       var checkStatus = table.checkStatus(obj.config.id);
                       switch(obj.event){
@@ -271,7 +269,7 @@
                               // alert(data)
                               var array = new Array();
                               $(data).each(function (index,item) {
-                                  array.push(item.userInfoId)
+                                  array.push(item.articleId)
                               })
                               // layer.alert(JSON.stringify(array));
                               delAll('',array)
@@ -288,24 +286,16 @@
                   //监听行工具事件
                   table.on('tool(test)', function(obj){
                       var data = obj.data;
-                      console.log(data.userInfoId)
                       if(obj.event === 'del'){
                           layer.confirm('确认已读吗？', function(index){
                               // obj.del();
                               // layer.close(index);
-                              member_del(obj,data.userInfoId)
+                              member_del(obj,data.articleId)
                           });
-                      } else if(obj.event === 'edit'){
-                          layer.prompt({
-                              formType: 2
-                              ,value: data.userInfoId
-                          }, function(value, index){
-                              obj.update({
-                                  userInfoId: value
-                              });
-                              layer.close(index);
-                              x_admin_show('个人资料',"individual-resume.html?id="+value,530,540)
-                          });
+                      } else if(obj.event === 'look'){
+                              x_admin_show('查看文章',"order-view.html?id="+data.articleId,700,600)
+                      }else if(obj.event === 'lookPersonal'){
+                          x_admin_show('查看个人信息',"individual-resume.html?id="+data.userInfoId,530,540)
                       }
                   });
                   // layer.init()
@@ -313,6 +303,7 @@
                   form.on('switch(statusDemo)', function(obj){
                       if (obj.elem.checked){
                           member_stop(null,this.value,obj.elem.checked)
+                          window.location.reload()
                       } else {
                           member_stop(null,this.value,obj.elem.checked)
                       }
@@ -323,18 +314,18 @@
                           var demoReload = $('#search');
                           $.ajax({
                               type: "POST",
-                              url: getRootPath() + "/getReportPersonalData",
+                              url: getRootPath() + "/getReportArticleBy",
                               contentType: "application/json;charset=UTF-8",
                               dataType: "json",
                               data: JSON.stringify({
                                   startTime: $("#start").val(),
                                   endTime: $("#end").val(),
-                                  username:$("#sreachUsername").val(),
-                                  flag: '1',
-                                  flagf: '1',
+                                  title:$("#sreachUsername").val(),
+                                  flag: 1,
+                                  vFlag: 1,
+
                               }),
                               success:function (data) {
-                                  console.log(data)
                                   //执行重载
                                   table.reload('searchReload', {
                                       data:data
@@ -359,6 +350,7 @@
 
           }
       })
+
 
 
 

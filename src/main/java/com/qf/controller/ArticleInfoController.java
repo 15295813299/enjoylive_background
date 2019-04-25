@@ -36,12 +36,6 @@ public class ArticleInfoController {
         return articleInfoPageInfo;
     }
 
-    @Test
-    public void dd(){
-        Date date = new Date();
-        System.out.println(date.getTime());
-    }
-
 
     /**
      * 获取文章类型

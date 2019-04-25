@@ -1,7 +1,9 @@
 package com.qf.controller;
 
+import com.qf.dto.ArticleInfoDto;
 import com.qf.dto.UserInfoDto;
 import com.qf.service.ReportService;
+import com.qf.vo.ArticleInfoVo;
 import com.qf.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,4 +37,20 @@ public class ReportController {
         return service.updateReportPersonalData(vo);
     }
 
+    /**
+     * 获取举报文章
+     * @param vo
+     * @return
+     */
+    @RequestMapping(value = "getReportArticleBy",method = RequestMethod.POST)
+    List<ArticleInfoDto> getReportArticleBy(@RequestBody ArticleInfoVo vo){
+        return service.getReportArticleBy(vo);
+    }
+
+    @RequestMapping(value = "updateReportArticleData",method = RequestMethod.POST)
+    public Boolean updateReportArticleData(@RequestBody ArticleInfoVo vo) {
+
+
+        return service.updateReportArticleData(vo);
+    }
 }
